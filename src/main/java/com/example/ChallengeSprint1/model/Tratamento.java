@@ -1,7 +1,6 @@
 package com.example.ChallengeSprint1.model;
 
 import jakarta.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "tratamento")
@@ -21,18 +20,71 @@ public class Tratamento {
     @Column(name = "custo", nullable = false)
     private Float custo;
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "data_inicio", nullable = false)
-    private Date dataInicio;
 
-    @Temporal(TemporalType.DATE)
+    @Column(name = "data_inicio", nullable = false)
+    private String dataInicio;
+
+
     @Column(name = "data_termino", nullable = false)
-    private Date dataTermino;
+    private String dataTermino;
 
     @ManyToOne
     @JoinColumn(name = "consulta_id_consulta", nullable = false)
     private Consulta consulta;
 
-    // Getters e Setters
-    // ...
+    public Long getIdTratamento() {
+        return idTratamento;
+    }
+
+    public void setIdTratamento(Long idTratamento) {
+        this.idTratamento = idTratamento;
+    }
+
+    public String getTipoTratamento() {
+        return tipoTratamento;
+    }
+
+    public void setTipoTratamento(String tipoTratamento) {
+        this.tipoTratamento = tipoTratamento;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public Float getCusto() {
+        return custo;
+    }
+
+    public void setCusto(Float custo) {
+        this.custo = custo;
+    }
+
+    public String getDataInicio() {
+        return dataInicio;
+    }
+
+    public void setDataInicio(String dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    public String getDataTermino() {
+        return dataTermino;
+    }
+
+    public void setDataTermino(String dataTermino) {
+        this.dataTermino = dataTermino;
+    }
+
+    public Consulta getConsulta() {
+        return consulta;
+    }
+
+    public void setConsulta(Consulta consulta) {
+        this.consulta = consulta;
+    }
 }

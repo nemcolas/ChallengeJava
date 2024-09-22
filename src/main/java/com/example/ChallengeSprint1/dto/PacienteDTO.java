@@ -1,6 +1,8 @@
 package com.example.ChallengeSprint1.dto;
 
 
+import java.util.Date;
+
 public class PacienteDTO {
 
     private Long id;

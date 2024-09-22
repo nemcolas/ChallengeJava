@@ -28,6 +28,52 @@ public class Dentista {
     @JoinColumn(name = "genero_id_genero", nullable = false)
     private Genero genero;
 
-    // Getters e Setters
-    // ...
+
+    public Long getIdDentista() {
+        return idDentista;
+    }
+
+    public void setIdDentista(Long idDentista) {
+        this.idDentista = idDentista;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getCro() {
+        return cro;
+    }
+
+    public void setCro(String cro) {
+        this.cro = cro;
+    }
+
+    public String getEspecialidade() {
+        return especialidade;
+    }
+
+    public void setEspecialidade(String especialidade) {
+        this.especialidade = especialidade;
+    }
+
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
+    }
+
+    public Genero getGenero() {
+        return genero;
+    }
+
+    public void setGenero(Genero genero) {
+        this.genero = genero;
+    }
 }

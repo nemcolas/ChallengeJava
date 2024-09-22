@@ -12,9 +12,9 @@ public class Consulta {
     @Column(name = "id_consulta")
     private Long idConsulta;
 
-    @Temporal(TemporalType.DATE)
+
     @Column(name = "data_consulta", nullable = false)
-    private Date dataConsulta;
+    private String dataConsulta;
 
     @Column(name = "tipo_consulta", nullable = false, length = 100)
     private String tipoConsulta;
@@ -33,7 +33,60 @@ public class Consulta {
     @JoinColumn(name = "dentista_id_dentista", nullable = false)
     private Dentista dentista;
 
-    // Getters e Setters
-    // ...
+    public Long getIdConsulta() {
+        return idConsulta;
+    }
+
+    public void setIdConsulta(Long idConsulta) {
+        this.idConsulta = idConsulta;
+    }
+
+    public String getDataConsulta() {
+        return dataConsulta;
+    }
+
+    public void setDataConsulta(String dataConsulta) {
+        this.dataConsulta = dataConsulta;
+    }
+
+    public String getTipoConsulta() {
+        return tipoConsulta;
+    }
+
+    public void setTipoConsulta(String tipoConsulta) {
+        this.tipoConsulta = tipoConsulta;
+    }
+
+    public Float getCusto() {
+        return custo;
+    }
+
+    public void setCusto(Float custo) {
+        this.custo = custo;
+    }
+
+    public String getStatusSinistro() {
+        return statusSinistro;
+    }
+
+    public void setStatusSinistro(String statusSinistro) {
+        this.statusSinistro = statusSinistro;
+    }
+
+    public Paciente getPaciente() {
+        return paciente;
+    }
+
+    public void setPaciente(Paciente paciente) {
+        this.paciente = paciente;
+    }
+
+    public Dentista getDentista() {
+        return dentista;
+    }
+
+    public void setDentista(Dentista dentista) {
+        this.dentista = dentista;
+    }
 }
 

@@ -17,9 +17,9 @@ public class Sinistro {
     @Column(name = "motivo_sinistro", nullable = false, length = 255)
     private String motivoSinistro;
 
-    @Temporal(TemporalType.DATE)
+
     @Column(name = "data_abertura", nullable = false)
-    private Date dataAbertura;
+    private String dataAbertura;
 
     @Column(name = "status_sinistro", nullable = false, length = 255)
     private String statusSinistro;
@@ -28,6 +28,44 @@ public class Sinistro {
     @JoinColumn(name = "consulta_id_consulta", nullable = false)
     private Consulta consulta;
 
-    // Getters e Setters
-    // ...
+
+    public Long getIdSinistro() {
+        return idSinistro;
+    }
+
+    public void setIdSinistro(Long idSinistro) {
+        this.idSinistro = idSinistro;
+    }
+
+    public String getMotivoSinistro() {
+        return motivoSinistro;
+    }
+
+    public void setMotivoSinistro(String motivoSinistro) {
+        this.motivoSinistro = motivoSinistro;
+    }
+
+    public String getDataAbertura() {
+        return dataAbertura;
+    }
+
+    public void setDataAbertura(String dataAbertura) {
+        this.dataAbertura = dataAbertura;
+    }
+
+    public String getStatusSinistro() {
+        return statusSinistro;
+    }
+
+    public void setStatusSinistro(String statusSinistro) {
+        this.statusSinistro = statusSinistro;
+    }
+
+    public Consulta getConsulta() {
+        return consulta;
+    }
+
+    public void setConsulta(Consulta consulta) {
+        this.consulta = consulta;
+    }
 }
