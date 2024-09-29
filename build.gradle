@@ -26,11 +26,8 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
 
-	dependencies {
-		// Swagger/OpenAPI
-		implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
-	}
-
+	// Swagger/OpenAPI
+	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
 }
 
 tasks.named('test') {
