@@ -18,16 +18,27 @@ repositories {
 }
 
 dependencies {
+	// Dependências principais
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// Dependências para desenvolvimento
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	// Dependências de Teste
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// Driver Oracle
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
 
 	// Swagger/OpenAPI
 	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
+	// Swagger Data Rest (se você estiver usando Data Rest)
+	implementation 'org.springdoc:springdoc-openapi-data-rest:1.7.0'
+	// Dependência opcional para suporte ao Spring WebMvc
+	implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.7.0'
 }
 
 tasks.named('test') {
