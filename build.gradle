@@ -34,11 +34,8 @@ dependencies {
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
 
 	// Swagger/OpenAPI
-	implementation 'org.springdoc:springdoc-openapi-ui:1.7.0'
-	// Swagger Data Rest (se você estiver usando Data Rest)
-	implementation 'org.springdoc:springdoc-openapi-data-rest:1.7.0'
-	// Dependência opcional para suporte ao Spring WebMvc
-	implementation 'org.springdoc:springdoc-openapi-webmvc-core:1.7.0'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+
 }
 
 tasks.named('test') {

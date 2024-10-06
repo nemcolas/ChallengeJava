@@ -32,6 +32,10 @@ todo o ecossistema de uma consulta odontologica para pegar esses dados e ver a p
 
 A aplicação estará disponível em `http://localhost:8080`. Você pode usar ferramentas como Postman ou cURL para interagir com a API.
 
+## Swagger
+
+`http://localhost:8080/swagger-ui.html`
+
 ## Endpoints
 
 ### Consultas
@@ -65,7 +69,3 @@ A aplicação estará disponível em `http://localhost:8080`. Você pode usar fe
 - **GET /tratamento/{id}**: Retorna um tratamento pelo ID.
 - **PUT /tratamento/{id}**: Atualiza um tratamento existente.
 - **DELETE /tratamento/{id}**: Deleta um tratamento.
-
-proximos passos:
-
-Criar o Controller para o Sinistro e tratamento. fazer os relacionamentos entre as entidades.
