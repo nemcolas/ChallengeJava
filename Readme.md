@@ -5,6 +5,9 @@
   - Tarefas: Revisão e correção, testes e documentação [ concluído em 07/10/2024 ]
 - Nicolas Martins RM553478
   - Tarefas: Desenvolvimento [ concluído em 30/09/2024 ]
+ 
+    ## Link para o vídeo no youtube
+    - https://youtu.be/nZGXHw4vg7Q
 
 Este projeto é uma aplicação Spring Boot para gerenciar consultas odontológicas, pacientes, dentistas e sinistros. tem como funcionalidade gerenciar 
 todo o ecossistema de uma consulta odontologica para pegar esses dados e ver a possibilidade de sinistros do plano de saúde.
@@ -93,6 +96,3 @@ https://github.com/nemcolas/ChallengeJava/blob/master/documentos/testes_api_post
 
 ![diagrama](https://github.com/user-attachments/assets/ee54ac62-833a-4e4b-b63b-f1c8af059b6e)
 
-## Vídeo de apresentação do projeto
-
-https://fiapcom-my.sharepoint.com/:v:/g/personal/rm553478_fiap_com_br/Eee15IIrqDpLhI4cbYJvmfIB5RsB24-OACYCygevYBCs7g?e=oMu8zY&nav=eyJwbGF5YmFja09wdGlvbnMiOnt9LCJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJUZWFtcyIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJwb3N0cm9sbC1jb3B5bGluayIsInJlZmVycmFsUGxheWJhY2tTZXNzaW9uSWQiOiJmYTlmMDRkZi1hZjJiLTQ0MTYtOGVhMi05MzRiYmZmMGZlMzQifX0%3D
