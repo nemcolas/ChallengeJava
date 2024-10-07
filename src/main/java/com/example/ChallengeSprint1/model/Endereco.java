@@ -3,7 +3,7 @@ package com.example.ChallengeSprint1.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "endereco")
+@Table(name = "ENDERECO")
 public class Endereco {
 
     @Id

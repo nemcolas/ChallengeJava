@@ -7,13 +7,13 @@ public class DentistaDTO {
     private String nome;
     private String cro;
     private String especialidade;
-    private String genero;
-    private String endereco;
+    private Long genero;
+    private Long endereco;
 
     // Construtores, Getters e Setters
     public DentistaDTO() {}
 
-    public DentistaDTO(Long id, String nome, String cro, String especialidade, String genero, String endereco) {
+    public DentistaDTO(Long id, String nome, String cro, String especialidade, Long genero, Long endereco) {
         this.id = id;
         this.nome = nome;
         this.cro = cro;
@@ -55,19 +55,19 @@ public class DentistaDTO {
         this.especialidade = especialidade;
     }
 
-    public String getGenero() {
+    public Long getGenero() {
         return genero;
     }
 
-    public void setGenero(String genero) {
+    public void setGenero(Long genero) {
         this.genero = genero;
     }
 
-    public String getEndereco() {
+    public Long getEndereco() {
         return endereco;
     }
 
-    public void setEndereco(String endereco) {
+    public void setEndereco(Long endereco) {
         this.endereco = endereco;
     }
 }

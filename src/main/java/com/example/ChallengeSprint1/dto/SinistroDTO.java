@@ -7,12 +7,12 @@ public class SinistroDTO {
     private String motivoSinistro;
     private String dataAbertura;
     private String statusSinistro;
-    private String consulta;
+    private Long consulta;
 
     // Construtores, Getters e Setters
     public SinistroDTO() {}
 
-    public SinistroDTO(Long id, String motivoSinistro, String dataAbertura, String statusSinistro, String consulta) {
+    public SinistroDTO(Long id, String motivoSinistro, String dataAbertura, String statusSinistro, Long consulta) {
         this.id = id;
         this.motivoSinistro = motivoSinistro;
         this.dataAbertura = dataAbertura;
@@ -53,11 +53,11 @@ public class SinistroDTO {
         this.statusSinistro = statusSinistro;
     }
 
-    public String getConsulta() {
+    public Long getConsulta() {
         return consulta;
     }
 
-    public void setConsulta(String consulta) {
+    public void setConsulta(Long consulta) {
         this.consulta = consulta;
     }
 }

@@ -1,11 +1,25 @@
 package com.example.ChallengeSprint1.service;
 
 import com.example.ChallengeSprint1.dto.PacienteDTO;
+import com.example.ChallengeSprint1.model.Dentista;
+import com.example.ChallengeSprint1.model.Endereco;
+import com.example.ChallengeSprint1.model.Genero;
 import com.example.ChallengeSprint1.model.Paciente;
+import com.example.ChallengeSprint1.repository.DentistaRepository;
+import com.example.ChallengeSprint1.repository.EnderecoRepository;
+import com.example.ChallengeSprint1.repository.GeneroRepository;
+import com.example.ChallengeSprint1.repository.PacienteRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PacienteMapper {
+
+    @Autowired
+    private GeneroRepository generoRepository;
+
+    @Autowired
+    private EnderecoRepository enderecoRepository;
 
     // Converte Paciente (entidade) para PacienteDTO
     public PacienteDTO entityToDTO(Paciente paciente) {
@@ -14,6 +28,8 @@ public class PacienteMapper {
         pacienteDTO.setNome(paciente.getNome());
         pacienteDTO.setCpf(paciente.getCpf());
         pacienteDTO.setDataNascimento(paciente.getDataNascimento());
+        pacienteDTO.setGenero(paciente.getGenero().getIdGenero());
+        pacienteDTO.setEndereco(paciente.getEndereco().getIdEndereco());
         return pacienteDTO;
     }
 
@@ -23,6 +39,12 @@ public class PacienteMapper {
         paciente.setNome(pacienteDTO.getNome());
         paciente.setCpf(pacienteDTO.getCpf());
         paciente.setDataNascimento(pacienteDTO.getDataNascimento());
+        Genero genero = generoRepository.findById(pacienteDTO.getGenero())
+                .orElseThrow(() -> new RuntimeException("Gênero não encontrado"));
+        paciente.setGenero(genero);
+        Endereco endereco = enderecoRepository.findById(pacienteDTO.getEndereco())
+                .orElseThrow(() -> new RuntimeException("Endereço não encontrado"));
+        paciente.setEndereco(endereco);
         return paciente;
     }
 }

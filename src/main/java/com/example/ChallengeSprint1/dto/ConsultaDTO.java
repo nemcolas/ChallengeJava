@@ -10,13 +10,13 @@ public class ConsultaDTO {
     private String tipoConsulta;
     private Float custo;
     private String statusSinistro;
-    private String paciente;
-    private String dentista;
+    private Long paciente;
+    private Long dentista;
 
     // Construtores, Getters e Setters
     public ConsultaDTO() {}
 
-    public ConsultaDTO(Long id, String dataConsulta, String tipoConsulta, Float custo, String statusSinistro, String paciente, String dentista) {
+    public ConsultaDTO(Long id, String dataConsulta, String tipoConsulta, Float custo, String statusSinistro, Long paciente, Long dentista) {
         this.id = id;
         this.dataConsulta = dataConsulta;
         this.tipoConsulta = tipoConsulta;
@@ -67,19 +67,19 @@ public class ConsultaDTO {
         this.statusSinistro = statusSinistro;
     }
 
-    public String getPaciente() {
+    public Long getPaciente() {
         return paciente;
     }
 
-    public void setPaciente(String paciente) {
+    public void setPaciente(Long paciente) {
         this.paciente = paciente;
     }
 
-    public String getDentista() {
+    public Long getDentista() {
         return dentista;
     }
 
-    public void setDentista(String dentista) {
+    public void setDentista(Long dentista) {
         this.dentista = dentista;
     }
 }

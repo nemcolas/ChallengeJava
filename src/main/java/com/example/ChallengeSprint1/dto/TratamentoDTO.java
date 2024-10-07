@@ -9,12 +9,12 @@ public class TratamentoDTO {
     private Float custo;
     private String dataInicio;
     private String dataTermino;
-    private String consulta;
+    private Long consulta;
 
     // Construtores, Getters e Setters
     public TratamentoDTO() {}
 
-    public TratamentoDTO(Long id, String tipoTratamento, String descricao, Float custo, String dataInicio, String dataTermino, String consulta) {
+    public TratamentoDTO(Long id, String tipoTratamento, String descricao, Float custo, String dataInicio, String dataTermino, Long consulta) {
         this.id = id;
         this.tipoTratamento = tipoTratamento;
         this.descricao = descricao;
@@ -73,11 +73,11 @@ public class TratamentoDTO {
         this.dataTermino = dataTermino;
     }
 
-    public String getConsulta() {
+    public Long getConsulta() {
         return consulta;
     }
 
-    public void setConsulta(String consulta) {
+    public void setConsulta(Long consulta) {
         this.consulta = consulta;
     }
 }

@@ -1,22 +1,20 @@
 package com.example.ChallengeSprint1.dto;
 
 
-import java.util.Date;
-
 public class PacienteDTO {
 
     private Long id;
     private String nome;
     private String cpf;
     private String dataNascimento;
-    private String genero;
-    private String endereco;
+    private Long genero;
+    private Long endereco;
 
     // Construtores, Getters e Setters
 
     public PacienteDTO() {}
 
-    public PacienteDTO(Long id, String nome, String cpf, String dataNascimento, String genero, String endereco) {
+    public PacienteDTO(Long id, String nome, String cpf, String dataNascimento, Long genero, Long endereco) {
         this.id = id;
         this.nome = nome;
         this.cpf = cpf;
@@ -58,19 +56,19 @@ public class PacienteDTO {
         this.dataNascimento = dataNascimento;
     }
 
-    public String getGenero() {
+    public Long getGenero() {
         return genero;
     }
 
-    public void setGenero(String genero) {
+    public void setGenero(Long genero) {
         this.genero = genero;
     }
 
-    public String getEndereco() {
+    public Long getEndereco() {
         return endereco;
     }
 
-    public void setEndereco(String endereco) {
+    public void setEndereco(Long endereco) {
         this.endereco = endereco;
     }
 }
