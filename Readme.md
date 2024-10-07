@@ -1,11 +1,17 @@
 # ChallengeSprint1
 
+## Membros
+- Luana Sousa Matos RM552621
+  - Tarefas: Revisão e correção, testes e documentação [ concluído em 07/10/2024 ]
+- Nicolas Martins RM553478
+  - Tarefas: Desenvolvimento [ concluído em 30/09/2024 ]
+
 Este projeto é uma aplicação Spring Boot para gerenciar consultas odontológicas, pacientes, dentistas e sinistros. tem como funcionalidade gerenciar 
 todo o ecossistema de uma consulta odontologica para pegar esses dados e ver a possibilidade de sinistros do plano de saúde.
 
 ## Pré-requisitos
 
-- Java 11 ou superior
+- Java 18 ou superior
 - Gradle
 - IDE de sua escolha (recomendado: IntelliJ IDEA)
 
@@ -31,10 +37,6 @@ todo o ecossistema de uma consulta odontologica para pegar esses dados e ver a p
 ## Uso
 
 A aplicação estará disponível em `http://localhost:8080`. Você pode usar ferramentas como Postman ou cURL para interagir com a API.
-
-## Swagger
-
-`http://localhost:8080/swagger-ui.html`
 
 ## Endpoints
 
@@ -69,3 +71,28 @@ A aplicação estará disponível em `http://localhost:8080`. Você pode usar fe
 - **GET /tratamento/{id}**: Retorna um tratamento pelo ID.
 - **PUT /tratamento/{id}**: Atualiza um tratamento existente.
 - **DELETE /tratamento/{id}**: Deleta um tratamento.
+
+### Sinistros
+
+- **POST /sinistros**: Cria um novo sinistro.
+- **GET /sinistros**: Retorna todos os sinistros.
+- **GET /sinistros/{id}**: Retorna um sinistro pelo ID.
+- **PUT /sinistros/{id}**: Atualiza um sinistro existente.
+- **DELETE /sinistros/{id}**: Deleta um sinistro.
+  
+## Swagger
+
+`http://localhost:8080/swagger-ui.html`
+
+## Testes
+- Vá até collections no postman e importe o arquivo .json
+
+https://github.com/nemcolas/ChallengeJava/blob/master/documentos/testes_api_postman.json
+
+## Diagrama de entidade
+
+![diagrama](https://github.com/user-attachments/assets/ee54ac62-833a-4e4b-b63b-f1c8af059b6e)
+
+## Vídeo de apresentação do projeto
+
+https://fiapcom-my.sharepoint.com/:v:/g/personal/rm553478_fiap_com_br/Eee15IIrqDpLhI4cbYJvmfIB5RsB24-OACYCygevYBCs7g?e=oMu8zY&nav=eyJwbGF5YmFja09wdGlvbnMiOnt9LCJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJUZWFtcyIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJwb3N0cm9sbC1jb3B5bGluayIsInJlZmVycmFsUGxheWJhY2tTZXNzaW9uSWQiOiJmYTlmMDRkZi1hZjJiLTQ0MTYtOGVhMi05MzRiYmZmMGZlMzQifX0%3D
