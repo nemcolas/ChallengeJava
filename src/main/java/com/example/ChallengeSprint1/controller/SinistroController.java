@@ -1,6 +1,7 @@
 package com.example.ChallengeSprint1.controller;
 
 
+import com.example.ChallengeSprint1.dto.GeneroDTO;
 import com.example.ChallengeSprint1.dto.SinistroDTO;
 import com.example.ChallengeSprint1.model.Sinistro;
 import com.example.ChallengeSprint1.repository.SinistroRepository;
@@ -13,6 +14,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +23,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/sinistros", produces = {"application/json"})
@@ -40,11 +46,13 @@ public class SinistroController {
                     content = @Content(schema = @Schema()))
     })
     @PostMapping
-    public ResponseEntity<SinistroDTO> createSinistro(@Valid @RequestBody SinistroDTO sinistroDTO) {
+    public ResponseEntity<EntityModel<SinistroDTO>> createSinistro(@Valid @RequestBody SinistroDTO sinistroDTO) {
         Sinistro sinistroConvertido = sinistroMapper.dtoToEntity(sinistroDTO);
         Sinistro sinistroCriado = sinistroRepository.save(sinistroConvertido);
         SinistroDTO sinistroResponse = sinistroMapper.entityToDTO(sinistroCriado);
-        return new ResponseEntity<>(sinistroResponse, HttpStatus.CREATED);
+        EntityModel<SinistroDTO> resource = EntityModel.of(sinistroResponse,
+                linkTo(methodOn(SinistroController.class).getSinistroById(sinistroResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
     // Lista todos os sinistros
@@ -55,15 +63,21 @@ public class SinistroController {
             @ApiResponse(responseCode = "200", description = "Sinistros retornados com sucesso")
     })
     @GetMapping
-    public ResponseEntity<List<SinistroDTO>> getAllSinistros() {
+    public ResponseEntity<CollectionModel<EntityModel<SinistroDTO>>> getAllSinistros() {
         List<Sinistro> listaSinistros = sinistroRepository.findAll();
         if (listaSinistros.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<SinistroDTO> listaSinistrosResponse = listaSinistros.stream()
-                .map(sinistroMapper::entityToDTO)
+        List<EntityModel<SinistroDTO>> sinistrosComLinks = listaSinistros.stream()
+                .map(sinistro -> {
+                    SinistroDTO sinistroDTO = sinistroMapper.entityToDTO(sinistro);
+                    return EntityModel.of(sinistroDTO,
+                            linkTo(methodOn(SinistroController.class).getSinistroById(sinistroDTO.getId())).withSelfRel());
+                })
                 .collect(Collectors.toList());
-        return new ResponseEntity<>(listaSinistrosResponse, HttpStatus.OK);
+        CollectionModel<EntityModel<SinistroDTO>> collectionModel = CollectionModel.of(sinistrosComLinks,
+                linkTo(methodOn(SinistroController.class).getAllSinistros()).withSelfRel());
+        return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
 
     // Retorna um sinistro por ID
@@ -74,13 +88,15 @@ public class SinistroController {
             @ApiResponse(responseCode = "200", description = "Sinistro encontrado com sucesso")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<SinistroDTO> getSinistroById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<SinistroDTO>> getSinistroById(@PathVariable Long id) {
         Optional<Sinistro> sinistroSalvo = sinistroRepository.findById(id);
         if (sinistroSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         SinistroDTO sinistroResponse = sinistroMapper.entityToDTO(sinistroSalvo.get());
-        return new ResponseEntity<>(sinistroResponse, HttpStatus.OK);
+        EntityModel<SinistroDTO> resource = EntityModel.of(sinistroResponse,
+                linkTo(methodOn(SinistroController.class).getSinistroById(sinistroResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     // Atualiza um sinistro
@@ -91,7 +107,7 @@ public class SinistroController {
             @ApiResponse(responseCode = "200", description = "Sinistro atualizado com sucesso")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<SinistroDTO> updateSinistro(@PathVariable Long id, @Valid @RequestBody SinistroDTO sinistroDTO) {
+    public ResponseEntity<EntityModel<SinistroDTO>> updateSinistro(@PathVariable Long id, @Valid @RequestBody SinistroDTO sinistroDTO) {
         Optional<Sinistro> sinistroSalvo = sinistroRepository.findById(id);
         if (sinistroSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -100,7 +116,9 @@ public class SinistroController {
         sinistroAtualizado.setIdSinistro(id);
         Sinistro sinistroSalvoAtualizado = sinistroRepository.save(sinistroAtualizado);
         SinistroDTO sinistroResponse = sinistroMapper.entityToDTO(sinistroSalvoAtualizado);
-        return new ResponseEntity<>(sinistroResponse, HttpStatus.OK);
+        EntityModel<SinistroDTO> resource = EntityModel.of(sinistroResponse,
+                linkTo(methodOn(SinistroController.class).getSinistroById(sinistroResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     // Deleta um sinistro

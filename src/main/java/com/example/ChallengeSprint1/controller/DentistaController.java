@@ -1,6 +1,7 @@
 package com.example.ChallengeSprint1.controller;
 
 import com.example.ChallengeSprint1.dto.DentistaDTO;
+import com.example.ChallengeSprint1.dto.GeneroDTO;
 import com.example.ChallengeSprint1.model.Dentista;
 import com.example.ChallengeSprint1.repository.DentistaRepository;
 import com.example.ChallengeSprint1.service.DentistaMapper;
@@ -12,6 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/dentista", produces = "application/json")
@@ -38,11 +44,13 @@ public class DentistaController {
             @ApiResponse(responseCode = "400", description = "Atributos inválidos",
                     content = @Content(schema = @Schema()))
     })
-    public ResponseEntity<DentistaDTO> criarDentista(@Valid @RequestBody DentistaDTO dentistaDTO) {
+    public ResponseEntity<EntityModel<DentistaDTO>> criarDentista(@Valid @RequestBody DentistaDTO dentistaDTO) {
         Dentista dentistaConvertido = dentistaMapper.dtoToEntity(dentistaDTO);
         Dentista dentistaCriado = dentistaRepository.save(dentistaConvertido);
         DentistaDTO dentistaResponse = dentistaMapper.entityToDTO(dentistaCriado);
-        return new ResponseEntity<>(dentistaResponse, HttpStatus.CREATED);
+        EntityModel<DentistaDTO> resource = EntityModel.of(dentistaResponse,
+                linkTo(methodOn(DentistaController.class).getDentistaById(dentistaResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -52,15 +60,21 @@ public class DentistaController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Dentistas retornados com sucesso")
     })
-    public ResponseEntity<List<DentistaDTO>> getAllDentistas() {
+    public ResponseEntity<CollectionModel<EntityModel<DentistaDTO>>> getAllDentistas() {
         List<Dentista> listaDentistas = dentistaRepository.findAll();
         if (listaDentistas.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<DentistaDTO> listaDentistasResponse = listaDentistas.stream()
-                .map(dentistaMapper::entityToDTO)
+        List<EntityModel<DentistaDTO>> dentistasComLinks = listaDentistas.stream()
+                .map(dentista -> {
+                    DentistaDTO dentistaDTO = dentistaMapper.entityToDTO(dentista);
+                    return EntityModel.of(dentistaDTO,
+                            linkTo(methodOn(DentistaController.class).getDentistaById(dentistaDTO.getId())).withSelfRel());
+                })
                 .collect(Collectors.toList());
-        return new ResponseEntity<>(listaDentistasResponse, HttpStatus.OK);
+        CollectionModel<EntityModel<DentistaDTO>> collectionModel = CollectionModel.of(dentistasComLinks,
+                linkTo(methodOn(DentistaController.class).getAllDentistas()).withSelfRel());
+        return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -70,13 +84,15 @@ public class DentistaController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Dentista encontrado com sucesso")
     })
-    public ResponseEntity<DentistaDTO> getDentistaById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<DentistaDTO>> getDentistaById(@PathVariable Long id) {
         Optional<Dentista> dentistaSalvo = dentistaRepository.findById(id);
         if (dentistaSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         DentistaDTO dentistaResponse = dentistaMapper.entityToDTO(dentistaSalvo.get());
-        return new ResponseEntity<>(dentistaResponse, HttpStatus.OK);
+        EntityModel<DentistaDTO> resource = EntityModel.of(dentistaResponse,
+                linkTo(methodOn(DentistaController.class).getDentistaById(dentistaResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -86,7 +102,7 @@ public class DentistaController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Dentista atualizado com sucesso")
     })
-    public ResponseEntity<DentistaDTO> updateDentista(@PathVariable Long id, @Valid @RequestBody DentistaDTO dentistaDTO) {
+    public ResponseEntity<EntityModel<DentistaDTO>> updateDentista(@PathVariable Long id, @Valid @RequestBody DentistaDTO dentistaDTO) {
         Optional<Dentista> dentistaSalvo = dentistaRepository.findById(id);
         if (dentistaSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -95,7 +111,9 @@ public class DentistaController {
         dentistaAtualizado.setIdDentista(id);
         Dentista dentistaSalvoAtualizado = dentistaRepository.save(dentistaAtualizado);
         DentistaDTO dentistaResponse = dentistaMapper.entityToDTO(dentistaSalvoAtualizado);
-        return new ResponseEntity<>(dentistaResponse, HttpStatus.OK);
+        EntityModel<DentistaDTO> resource = EntityModel.of(dentistaResponse,
+                linkTo(methodOn(DentistaController.class).getDentistaById(dentistaResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

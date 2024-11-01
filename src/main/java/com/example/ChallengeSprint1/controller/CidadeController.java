@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/cidade", produces = "application/json")
@@ -38,11 +43,13 @@ public class CidadeController {
             @ApiResponse(responseCode = "400", description = "Atributos inválidos",
                     content = @Content(schema = @Schema()))
     })
-    public ResponseEntity<CidadeDTO> criarCidade(@Valid @RequestBody CidadeDTO cidadeDTO) {
+    public ResponseEntity<EntityModel<CidadeDTO>> criarCidade(@Valid @RequestBody CidadeDTO cidadeDTO) {
         Cidade cidadeConvertida = cidadeMapper.dtoToEntity(cidadeDTO);
         Cidade cidadeCriada = cidadeRepository.save(cidadeConvertida);
         CidadeDTO cidadeResponse = cidadeMapper.entityToDTO(cidadeCriada);
-        return new ResponseEntity<>(cidadeResponse, HttpStatus.CREATED);
+        EntityModel<CidadeDTO> resource = EntityModel.of(cidadeResponse,
+                linkTo(methodOn(CidadeController.class).getCidadeById(cidadeResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -52,15 +59,21 @@ public class CidadeController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Cidades retornadas com sucesso")
     })
-    public ResponseEntity<List<CidadeDTO>> getAllCidades() {
+    public ResponseEntity<CollectionModel<EntityModel<CidadeDTO>>> getAllCidades() {
         List<Cidade> listaCidades = cidadeRepository.findAll();
         if (listaCidades.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<CidadeDTO> listaCidadesResponse = listaCidades.stream()
-                .map(cidadeMapper::entityToDTO)
+        List<EntityModel<CidadeDTO>> cidadesComLinks = listaCidades.stream()
+                .map(cidade -> {
+                    CidadeDTO cidadeDTO = cidadeMapper.entityToDTO(cidade);
+                    return EntityModel.of(cidadeDTO,
+                            linkTo(methodOn(CidadeController.class).getCidadeById(cidadeDTO.getId())).withSelfRel());
+                })
                 .collect(Collectors.toList());
-        return new ResponseEntity<>(listaCidadesResponse, HttpStatus.OK);
+        CollectionModel<EntityModel<CidadeDTO>> collectionModel = CollectionModel.of(cidadesComLinks,
+                linkTo(methodOn(CidadeController.class).getAllCidades()).withSelfRel());
+        return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -70,13 +83,15 @@ public class CidadeController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Cidade encontrada com sucesso")
     })
-    public ResponseEntity<CidadeDTO> getCidadeById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<CidadeDTO>> getCidadeById(@PathVariable Long id) {
         Optional<Cidade> cidadeSalva = cidadeRepository.findById(id);
         if (cidadeSalva.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         CidadeDTO cidadeResponse = cidadeMapper.entityToDTO(cidadeSalva.get());
-        return new ResponseEntity<>(cidadeResponse, HttpStatus.OK);
+        EntityModel<CidadeDTO> resource = EntityModel.of(cidadeResponse,
+                linkTo(methodOn(CidadeController.class).getCidadeById(cidadeResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -86,7 +101,7 @@ public class CidadeController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Cidade atualizada com sucesso")
     })
-    public ResponseEntity<CidadeDTO> updateCidade(@PathVariable Long id, @Valid @RequestBody CidadeDTO cidadeDTO) {
+    public ResponseEntity<EntityModel<CidadeDTO>> updateCidade(@PathVariable Long id, @Valid @RequestBody CidadeDTO cidadeDTO) {
         Optional<Cidade> cidadeSalva = cidadeRepository.findById(id);
         if (cidadeSalva.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -95,7 +110,9 @@ public class CidadeController {
         cidadeAtualizada.setCodCidade(id);
         Cidade cidadeSalvaAtualizada = cidadeRepository.save(cidadeAtualizada);
         CidadeDTO cidadeResponse = cidadeMapper.entityToDTO(cidadeSalvaAtualizada);
-        return new ResponseEntity<>(cidadeResponse, HttpStatus.OK);
+        EntityModel<CidadeDTO> resource = EntityModel.of(cidadeResponse,
+                linkTo(methodOn(CidadeController.class).getCidadeById(cidadeResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

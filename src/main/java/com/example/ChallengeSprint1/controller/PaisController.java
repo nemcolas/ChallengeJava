@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/pais", produces = "application/json")
@@ -38,11 +43,13 @@ public class PaisController {
             @ApiResponse(responseCode = "400", description = "Atributos inválidos",
                     content = @Content(schema = @Schema()))
     })
-    public ResponseEntity<PaisDTO> criarPais(@Valid @RequestBody PaisDTO paisDTO) {
+    public ResponseEntity<EntityModel<PaisDTO>> criarPais(@Valid @RequestBody PaisDTO paisDTO) {
         Pais paisConvertido = paisMapper.dtoToEntity(paisDTO);
         Pais paisCriado = paisRepository.save(paisConvertido);
         PaisDTO paisResponse = paisMapper.entityToDTO(paisCriado);
-        return new ResponseEntity<>(paisResponse, HttpStatus.CREATED);
+        EntityModel<PaisDTO> resource = EntityModel.of(paisResponse,
+                linkTo(methodOn(PaisController.class).getPaisById(paisResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -52,15 +59,21 @@ public class PaisController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Paises retornados com sucesso")
     })
-    public ResponseEntity<List<PaisDTO>> getAllPaiss() {
+    public ResponseEntity<CollectionModel<EntityModel<PaisDTO>>> getAllPaises() {
         List<Pais> listaPaises = paisRepository.findAll();
         if (listaPaises.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<PaisDTO> listaPaissResponse = listaPaises.stream()
-                .map(paisMapper::entityToDTO)
+        List<EntityModel<PaisDTO>> paisesComLinks = listaPaises.stream()
+                .map(pais -> {
+                    PaisDTO paisDTO = paisMapper.entityToDTO(pais);
+                    return EntityModel.of(paisDTO,
+                            linkTo(methodOn(PaisController.class).getPaisById(paisDTO.getId())).withSelfRel());
+                })
                 .collect(Collectors.toList());
-        return new ResponseEntity<>(listaPaissResponse, HttpStatus.OK);
+        CollectionModel<EntityModel<PaisDTO>> collectionModel = CollectionModel.of(paisesComLinks,
+                linkTo(methodOn(PaisController.class).getAllPaises()).withSelfRel());
+        return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -70,13 +83,15 @@ public class PaisController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Pais encontrado com sucesso")
     })
-    public ResponseEntity<PaisDTO> getPaisById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<PaisDTO>> getPaisById(@PathVariable Long id) {
         Optional<Pais> paisSalvo = paisRepository.findById(id);
         if (paisSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         PaisDTO paisResponse = paisMapper.entityToDTO(paisSalvo.get());
-        return new ResponseEntity<>(paisResponse, HttpStatus.OK);
+        EntityModel<PaisDTO> resource = EntityModel.of(paisResponse,
+                linkTo(methodOn(PaisController.class).getPaisById(id)).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -86,7 +101,7 @@ public class PaisController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Pais atualizado com sucesso")
     })
-    public ResponseEntity<PaisDTO> updatePais(@PathVariable Long id, @Valid @RequestBody PaisDTO paisDTO) {
+    public ResponseEntity<EntityModel<PaisDTO>> updatePais(@PathVariable Long id, @Valid @RequestBody PaisDTO paisDTO) {
         Optional<Pais> paisSalvo = paisRepository.findById(id);
         if (paisSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -95,7 +110,9 @@ public class PaisController {
         paisAtualizado.setCodPais(id);
         Pais paisSalvoAtualizado = paisRepository.save(paisAtualizado);
         PaisDTO paisResponse = paisMapper.entityToDTO(paisSalvoAtualizado);
-        return new ResponseEntity<>(paisResponse, HttpStatus.OK);
+        EntityModel<PaisDTO> resource = EntityModel.of(paisResponse,
+                linkTo(methodOn(PaisController.class).getPaisById(id)).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

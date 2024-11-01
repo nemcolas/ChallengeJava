@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/genero", produces = "application/json")
@@ -38,11 +43,13 @@ public class GeneroController {
             @ApiResponse(responseCode = "400", description = "Atributos inválidos",
                     content = @Content(schema = @Schema()))
     })
-    public ResponseEntity<GeneroDTO> criarGenero(@Valid @RequestBody GeneroDTO generoDTO) {
+    public ResponseEntity<EntityModel<GeneroDTO>> criarGenero(@Valid @RequestBody GeneroDTO generoDTO) {
         Genero generoConvertido = generoMapper.dtoToEntity(generoDTO);
         Genero generoCriado = generoRepository.save(generoConvertido);
         GeneroDTO generoResponse = generoMapper.entityToDTO(generoCriado);
-        return new ResponseEntity<>(generoResponse, HttpStatus.CREATED);
+        EntityModel<GeneroDTO> resource = EntityModel.of(generoResponse,
+                linkTo(methodOn(GeneroController.class).getGeneroById(generoResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -52,15 +59,21 @@ public class GeneroController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Generos retornados com sucesso")
     })
-    public ResponseEntity<List<GeneroDTO>> getAllGeneros() {
+    public ResponseEntity<CollectionModel<EntityModel<GeneroDTO>>> getAllGeneros() {
         List<Genero> listaGeneros = generoRepository.findAll();
         if (listaGeneros.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<GeneroDTO> listaGenerosResponse = listaGeneros.stream()
-                .map(generoMapper::entityToDTO)
+        List<EntityModel<GeneroDTO>> generosComLinks = listaGeneros.stream()
+                .map(genero -> {
+                    GeneroDTO generoDTO = generoMapper.entityToDTO(genero);
+                    return EntityModel.of(generoDTO,
+                            linkTo(methodOn(GeneroController.class).getGeneroById(generoDTO.getId())).withSelfRel());
+                })
                 .collect(Collectors.toList());
-        return new ResponseEntity<>(listaGenerosResponse, HttpStatus.OK);
+        CollectionModel<EntityModel<GeneroDTO>> collectionModel = CollectionModel.of(generosComLinks,
+                linkTo(methodOn(GeneroController.class).getAllGeneros()).withSelfRel());
+        return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -70,13 +83,15 @@ public class GeneroController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Genero encontrado com sucesso")
     })
-    public ResponseEntity<GeneroDTO> getGeneroById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<GeneroDTO>> getGeneroById(@PathVariable Long id) {
         Optional<Genero> generoSalvo = generoRepository.findById(id);
         if (generoSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         GeneroDTO generoResponse = generoMapper.entityToDTO(generoSalvo.get());
-        return new ResponseEntity<>(generoResponse, HttpStatus.OK);
+        EntityModel<GeneroDTO> resource = EntityModel.of(generoResponse,
+                linkTo(methodOn(GeneroController.class).getGeneroById(id)).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -86,7 +101,7 @@ public class GeneroController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Genero atualizado com sucesso")
     })
-    public ResponseEntity<GeneroDTO> updateGenero(@PathVariable Long id, @Valid @RequestBody GeneroDTO generoDTO) {
+    public ResponseEntity<EntityModel<GeneroDTO>> updateGenero(@PathVariable Long id, @Valid @RequestBody GeneroDTO generoDTO) {
         Optional<Genero> generoSalvo = generoRepository.findById(id);
         if (generoSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -95,7 +110,9 @@ public class GeneroController {
         generoAtualizado.setIdGenero(id);
         Genero generoSalvoAtualizado = generoRepository.save(generoAtualizado);
         GeneroDTO generoResponse = generoMapper.entityToDTO(generoSalvoAtualizado);
-        return new ResponseEntity<>(generoResponse, HttpStatus.OK);
+        EntityModel<GeneroDTO> resource = EntityModel.of(generoResponse,
+                linkTo(methodOn(GeneroController.class).getGeneroById(id)).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

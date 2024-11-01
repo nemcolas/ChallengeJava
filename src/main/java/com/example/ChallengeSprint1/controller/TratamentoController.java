@@ -1,6 +1,7 @@
 package com.example.ChallengeSprint1.controller;
 
 
+import com.example.ChallengeSprint1.dto.GeneroDTO;
 import com.example.ChallengeSprint1.dto.TratamentoDTO;
 import com.example.ChallengeSprint1.exception.ValidationExceptionHandler;
 import com.example.ChallengeSprint1.model.Tratamento;
@@ -14,6 +15,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +24,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/tratamentos", produces = {"application/json"})
@@ -41,11 +47,13 @@ public class TratamentoController {
                     content = @Content(schema = @Schema()))
     })
     @PostMapping
-    public ResponseEntity<TratamentoDTO> createTratamento(@Valid @RequestBody TratamentoDTO tratamentoDTO) {
+    public ResponseEntity<EntityModel<TratamentoDTO>> createTratamento(@Valid @RequestBody TratamentoDTO tratamentoDTO) {
         Tratamento tratamentoConvertido = tratamentoMapper.dtoToEntity(tratamentoDTO);
         Tratamento tratamentoCriado = tratamentoRepository.save(tratamentoConvertido);
         TratamentoDTO tratamentoResponse = tratamentoMapper.entityToDTO(tratamentoCriado);
-        return new ResponseEntity<>(tratamentoResponse, HttpStatus.CREATED);
+        EntityModel<TratamentoDTO> resource = EntityModel.of(tratamentoResponse,
+                linkTo(methodOn(TratamentoController.class).getTratamentoById(tratamentoResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
     // Lista todos os tratamentos
@@ -56,15 +64,21 @@ public class TratamentoController {
             @ApiResponse(responseCode = "200", description = "Tratamentos retornados com sucesso")
     })
     @GetMapping
-    public ResponseEntity<List<TratamentoDTO>> getAllTratamentos() {
+    public ResponseEntity<CollectionModel<EntityModel<TratamentoDTO>>> getAllTratamentos() {
         List<Tratamento> listaTratamentos = tratamentoRepository.findAll();
         if (listaTratamentos.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<TratamentoDTO> listaTratamentosResponse = listaTratamentos.stream()
-                .map(tratamentoMapper::entityToDTO)
+        List<EntityModel<TratamentoDTO>> tratamentosComLinks = listaTratamentos.stream()
+                .map(tratamento -> {
+                    TratamentoDTO tratamentoDTO = tratamentoMapper.entityToDTO(tratamento);
+                    return EntityModel.of(tratamentoDTO,
+                            linkTo(methodOn(TratamentoController.class).getTratamentoById(tratamentoDTO.getId())).withSelfRel());
+                })
                 .collect(Collectors.toList());
-        return new ResponseEntity<>(listaTratamentosResponse, HttpStatus.OK);
+        CollectionModel<EntityModel<TratamentoDTO>> collectionModel = CollectionModel.of(tratamentosComLinks,
+                linkTo(methodOn(TratamentoController.class).getAllTratamentos()).withSelfRel());
+        return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
 
     // Retorna um tratamento por ID
@@ -75,13 +89,15 @@ public class TratamentoController {
             @ApiResponse(responseCode = "200", description = "Tratamento encontrado com sucesso")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<TratamentoDTO> getTratamentoById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<TratamentoDTO>> getTratamentoById(@PathVariable Long id) {
         Optional<Tratamento> tratamentoSalvo = tratamentoRepository.findById(id);
         if (tratamentoSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         TratamentoDTO tratamentoResponse = tratamentoMapper.entityToDTO(tratamentoSalvo.get());
-        return new ResponseEntity<>(tratamentoResponse, HttpStatus.OK);
+        EntityModel<TratamentoDTO> resource = EntityModel.of(tratamentoResponse,
+                linkTo(methodOn(TratamentoController.class).getTratamentoById(tratamentoResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     // Atualiza um tratamento
@@ -92,7 +108,7 @@ public class TratamentoController {
             @ApiResponse(responseCode = "200", description = "Tratamento atualizado com sucesso")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<TratamentoDTO> updateTratamento(@PathVariable Long id, @Valid @RequestBody TratamentoDTO tratamentoDTO) {
+    public ResponseEntity<EntityModel<TratamentoDTO>> updateTratamento(@PathVariable Long id, @Valid @RequestBody TratamentoDTO tratamentoDTO) {
         Optional<Tratamento> tratamentoSalvo = tratamentoRepository.findById(id);
         if (tratamentoSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -101,7 +117,9 @@ public class TratamentoController {
         tratamentoAtualizado.setIdTratamento(id);
         Tratamento tratamentoSalvoAtualizado = tratamentoRepository.save(tratamentoAtualizado);
         TratamentoDTO tratamentoResponse = tratamentoMapper.entityToDTO(tratamentoSalvoAtualizado);
-        return new ResponseEntity<>(tratamentoResponse, HttpStatus.OK);
+        EntityModel<TratamentoDTO> resource = EntityModel.of(tratamentoResponse,
+                linkTo(methodOn(TratamentoController.class).getTratamentoById(tratamentoResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     // Deleta um tratamento

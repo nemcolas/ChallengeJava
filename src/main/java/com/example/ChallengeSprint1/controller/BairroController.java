@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/bairro", produces = "application/json")
@@ -38,11 +43,13 @@ public class BairroController {
             @ApiResponse(responseCode = "400", description = "Atributos inválidos",
                     content = @Content(schema = @Schema()))
     })
-    public ResponseEntity<BairroDTO> criarBairro(@Valid @RequestBody BairroDTO bairroDTO) {
+    public ResponseEntity<EntityModel<BairroDTO>> criarBairro(@Valid @RequestBody BairroDTO bairroDTO) {
         Bairro bairroConvertido = bairroMapper.dtoToEntity(bairroDTO);
         Bairro bairroCriado = bairroRepository.save(bairroConvertido);
         BairroDTO bairroResponse = bairroMapper.entityToDTO(bairroCriado);
-        return new ResponseEntity<>(bairroResponse, HttpStatus.CREATED);
+        EntityModel<BairroDTO> resource = EntityModel.of(bairroResponse,
+                linkTo(methodOn(BairroController.class).getBairroById(bairroResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -52,15 +59,21 @@ public class BairroController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Bairros retornados com sucesso")
     })
-    public ResponseEntity<List<BairroDTO>> getAllBairros() {
+    public ResponseEntity<CollectionModel<EntityModel<BairroDTO>>> getAllBairros() {
         List<Bairro> listaBairros = bairroRepository.findAll();
         if (listaBairros.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<BairroDTO> listaBairrosResponse = listaBairros.stream()
-                .map(bairroMapper::entityToDTO)
+        List<EntityModel<BairroDTO>> bairrosComLinks = listaBairros.stream()
+                .map(bairro -> {
+                    BairroDTO bairroDTO = bairroMapper.entityToDTO(bairro);
+                    return EntityModel.of(bairroDTO,
+                            linkTo(methodOn(BairroController.class).getBairroById(bairroDTO.getId())).withSelfRel());
+                })
                 .collect(Collectors.toList());
-        return new ResponseEntity<>(listaBairrosResponse, HttpStatus.OK);
+        CollectionModel<EntityModel<BairroDTO>> collectionModel = CollectionModel.of(bairrosComLinks,
+                linkTo(methodOn(BairroController.class).getAllBairros()).withSelfRel());
+        return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -70,13 +83,15 @@ public class BairroController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Bairro encontrado com sucesso")
     })
-    public ResponseEntity<BairroDTO> getBairroById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<BairroDTO>> getBairroById(@PathVariable Long id) {
         Optional<Bairro> bairroSalvo = bairroRepository.findById(id);
         if (bairroSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         BairroDTO bairroResponse = bairroMapper.entityToDTO(bairroSalvo.get());
-        return new ResponseEntity<>(bairroResponse, HttpStatus.OK);
+        EntityModel<BairroDTO> resource = EntityModel.of(bairroResponse,
+                linkTo(methodOn(BairroController.class).getBairroById(bairroResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -86,7 +101,7 @@ public class BairroController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Bairro atualizado com sucesso")
     })
-    public ResponseEntity<BairroDTO> updateBairro(@PathVariable Long id, @Valid @RequestBody BairroDTO bairroDTO) {
+    public ResponseEntity<EntityModel<BairroDTO>> updateBairro(@PathVariable Long id, @Valid @RequestBody BairroDTO bairroDTO) {
         Optional<Bairro> bairroSalvo = bairroRepository.findById(id);
         if (bairroSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -95,7 +110,9 @@ public class BairroController {
         bairroAtualizado.setCodBairro(id);
         Bairro bairroSalvoAtualizado = bairroRepository.save(bairroAtualizado);
         BairroDTO bairroResponse = bairroMapper.entityToDTO(bairroSalvoAtualizado);
-        return new ResponseEntity<>(bairroResponse, HttpStatus.OK);
+        EntityModel<BairroDTO> resource = EntityModel.of(bairroResponse,
+                linkTo(methodOn(BairroController.class).getBairroById(bairroResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

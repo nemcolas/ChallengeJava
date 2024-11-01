@@ -1,6 +1,7 @@
 package com.example.ChallengeSprint1.controller;
 
 import com.example.ChallengeSprint1.dto.ConsultaDTO;
+import com.example.ChallengeSprint1.dto.GeneroDTO;
 import com.example.ChallengeSprint1.model.Consulta;
 import com.example.ChallengeSprint1.repository.ConsultaRepository;
 import com.example.ChallengeSprint1.service.ConsultaMapper;
@@ -12,6 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +22,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/consulta", produces = "application/json")
@@ -38,11 +44,13 @@ public class ConsultaController {
             @ApiResponse(responseCode = "400", description = "Atributos inválidos",
                     content = @Content(schema = @Schema()))
     })
-    public ResponseEntity<ConsultaDTO> criarConsulta(@Valid @RequestBody ConsultaDTO consultaDTO) {
+    public ResponseEntity<EntityModel<ConsultaDTO>> criarConsulta(@Valid @RequestBody ConsultaDTO consultaDTO) {
         Consulta consultaConvertida = consultaMapper.dtoToEntity(consultaDTO);
         Consulta consultaCriada = consultaRepository.save(consultaConvertida);
         ConsultaDTO consultaResponse = consultaMapper.entityToDTO(consultaCriada);
-        return new ResponseEntity<>(consultaResponse, HttpStatus.CREATED);
+        EntityModel<ConsultaDTO> resource = EntityModel.of(consultaResponse,
+                linkTo(methodOn(ConsultaController.class).getConsultaById(consultaResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
     @GetMapping
@@ -52,15 +60,21 @@ public class ConsultaController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Consultas retornadas com sucesso")
     })
-    public ResponseEntity<List<ConsultaDTO>> getAllConsultas() {
+    public ResponseEntity<CollectionModel<EntityModel<ConsultaDTO>>> getAllConsultas() {
         List<Consulta> listaConsultas = consultaRepository.findAll();
         if (listaConsultas.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<ConsultaDTO> listaConsultasResponse = listaConsultas.stream()
-                .map(consultaMapper::entityToDTO)
+        List<EntityModel<ConsultaDTO>> consultasComLinks = listaConsultas.stream()
+                .map(consulta -> {
+                    ConsultaDTO consultaDTO = consultaMapper.entityToDTO(consulta);
+                    return EntityModel.of(consultaDTO,
+                            linkTo(methodOn(ConsultaController.class).getConsultaById(consultaDTO.getId())).withSelfRel());
+                })
                 .collect(Collectors.toList());
-        return new ResponseEntity<>(listaConsultasResponse, HttpStatus.OK);
+        CollectionModel<EntityModel<ConsultaDTO>> collectionModel = CollectionModel.of(consultasComLinks,
+                linkTo(methodOn(ConsultaController.class).getAllConsultas()).withSelfRel());
+        return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
@@ -70,13 +84,15 @@ public class ConsultaController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Consulta encontrada com sucesso")
     })
-    public ResponseEntity<ConsultaDTO> getConsultaById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<ConsultaDTO>> getConsultaById(@PathVariable Long id) {
         Optional<Consulta> consultaSalva = consultaRepository.findById(id);
         if (consultaSalva.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         ConsultaDTO consultaResponse = consultaMapper.entityToDTO(consultaSalva.get());
-        return new ResponseEntity<>(consultaResponse, HttpStatus.OK);
+        EntityModel<ConsultaDTO> resource = EntityModel.of(consultaResponse,
+                linkTo(methodOn(ConsultaController.class).getConsultaById(consultaResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -86,7 +102,7 @@ public class ConsultaController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Consulta atualizada com sucesso")
     })
-    public ResponseEntity<ConsultaDTO> updateConsulta(@PathVariable Long id, @Valid @RequestBody ConsultaDTO consultaDTO) {
+    public ResponseEntity<EntityModel<ConsultaDTO>> updateConsulta(@PathVariable Long id, @Valid @RequestBody ConsultaDTO consultaDTO) {
         Optional<Consulta> consultaSalva = consultaRepository.findById(id);
         if (consultaSalva.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -95,7 +111,9 @@ public class ConsultaController {
         consultaAtualizada.setIdConsulta(id);
         Consulta consultaSalvaAtualizada = consultaRepository.save(consultaAtualizada);
         ConsultaDTO consultaResponse = consultaMapper.entityToDTO(consultaSalvaAtualizada);
-        return new ResponseEntity<>(consultaResponse, HttpStatus.OK);
+        EntityModel<ConsultaDTO> resource = EntityModel.of(consultaResponse,
+                linkTo(methodOn(ConsultaController.class).getConsultaById(consultaResponse.getId())).withSelfRel());
+        return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
