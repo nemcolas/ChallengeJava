@@ -3,7 +3,7 @@ package com.example.ChallengeSprint1.controller;
 import com.example.ChallengeSprint1.dto.ConsultaDTO;
 import com.example.ChallengeSprint1.model.Consulta;
 import com.example.ChallengeSprint1.repository.ConsultaRepository;
-import com.example.ChallengeSprint1.mapper.ConsultaMapper;
+import com.example.ChallengeSprint1.service.mapper.ConsultaMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,4 +1,4 @@
-package com.example.ChallengeSprint1.mapper;
+package com.example.ChallengeSprint1.service.mapper;
 
 
 

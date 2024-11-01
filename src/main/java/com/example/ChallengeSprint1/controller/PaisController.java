@@ -3,7 +3,7 @@ package com.example.ChallengeSprint1.controller;
 import com.example.ChallengeSprint1.dto.PaisDTO;
 import com.example.ChallengeSprint1.model.Pais;
 import com.example.ChallengeSprint1.repository.PaisRepository;
-import com.example.ChallengeSprint1.mapper.PaisMapper;
+import com.example.ChallengeSprint1.service.mapper.PaisMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

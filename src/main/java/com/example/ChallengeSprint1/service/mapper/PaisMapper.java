@@ -1,4 +1,4 @@
-package com.example.ChallengeSprint1.mapper;
+package com.example.ChallengeSprint1.service.mapper;
 
 import com.example.ChallengeSprint1.dto.PaisDTO;
 import com.example.ChallengeSprint1.model.Pais;
