@@ -1,6 +1,8 @@
 package com.example.ChallengeSprint1.dto;
 
+import lombok.Data;
 
+@Data
 public class SinistroDTO {
 
     private Long id;
@@ -9,55 +11,4 @@ public class SinistroDTO {
     private String statusSinistro;
     private Long consulta;
 
-    // Construtores, Getters e Setters
-    public SinistroDTO() {}
-
-    public SinistroDTO(Long id, String motivoSinistro, String dataAbertura, String statusSinistro, Long consulta) {
-        this.id = id;
-        this.motivoSinistro = motivoSinistro;
-        this.dataAbertura = dataAbertura;
-        this.statusSinistro = statusSinistro;
-        this.consulta = consulta;
-    }
-
-    // Getters e Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getMotivoSinistro() {
-        return motivoSinistro;
-    }
-
-    public void setMotivoSinistro(String motivoSinistro) {
-        this.motivoSinistro = motivoSinistro;
-    }
-
-    public String getDataAbertura() {
-        return dataAbertura;
-    }
-
-    public void setDataAbertura(String dataAbertura) {
-        this.dataAbertura = dataAbertura;
-    }
-
-    public String getStatusSinistro() {
-        return statusSinistro;
-    }
-
-    public void setStatusSinistro(String statusSinistro) {
-        this.statusSinistro = statusSinistro;
-    }
-
-    public Long getConsulta() {
-        return consulta;
-    }
-
-    public void setConsulta(Long consulta) {
-        this.consulta = consulta;
-    }
 }

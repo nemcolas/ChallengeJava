@@ -1,6 +1,8 @@
 package com.example.ChallengeSprint1.dto;
 
+import lombok.Data;
 
+@Data
 public class TratamentoDTO {
 
     private Long id;
@@ -11,73 +13,4 @@ public class TratamentoDTO {
     private String dataTermino;
     private Long consulta;
 
-    // Construtores, Getters e Setters
-    public TratamentoDTO() {}
-
-    public TratamentoDTO(Long id, String tipoTratamento, String descricao, Float custo, String dataInicio, String dataTermino, Long consulta) {
-        this.id = id;
-        this.tipoTratamento = tipoTratamento;
-        this.descricao = descricao;
-        this.custo = custo;
-        this.dataInicio = dataInicio;
-        this.dataTermino = dataTermino;
-        this.consulta = consulta;
-    }
-
-    // Getters e Setters
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTipoTratamento() {
-        return tipoTratamento;
-    }
-
-    public void setTipoTratamento(String tipoTratamento) {
-        this.tipoTratamento = tipoTratamento;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public Float getCusto() {
-        return custo;
-    }
-
-    public void setCusto(Float custo) {
-        this.custo = custo;
-    }
-
-    public String getDataInicio() {
-        return dataInicio;
-    }
-
-    public void setDataInicio(String dataInicio) {
-        this.dataInicio = dataInicio;
-    }
-
-    public String getDataTermino() {
-        return dataTermino;
-    }
-
-    public void setDataTermino(String dataTermino) {
-        this.dataTermino = dataTermino;
-    }
-
-    public Long getConsulta() {
-        return consulta;
-    }
-
-    public void setConsulta(Long consulta) {
-        this.consulta = consulta;
-    }
 }

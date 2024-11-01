@@ -3,9 +3,9 @@ package com.example.ChallengeSprint1.dto;
 import lombok.Data;
 
 @Data
-public class GeneroDTO {
+public class PaisDTO {
 
     private Long id;
-    private String descricao;
+    private String nome;
 
 }
