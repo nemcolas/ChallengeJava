@@ -1,71 +1,28 @@
 package com.example.ChallengeSprint1.model;
 
-
-
 import jakarta.persistence.*;
-import java.util.Date;
+import lombok.Data;
 
 @Entity
-@Table(name = "SINISTRO")
+@Table(name = "CH_SINISTRO")
+@Data
 public class Sinistro {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_sinistro")
+    @Column(name = "ID_SINISTRO")
     private Long idSinistro;
 
-    @Column(name = "motivo_sinistro", nullable = false, length = 255)
+    @Column(name = "MOTIVO_SINISTRO", nullable = false, length = 255)
     private String motivoSinistro;
 
-
-    @Column(name = "data_abertura", nullable = false)
+    @Column(name = "DATA_ABERTURA", nullable = false, length = 20)
     private String dataAbertura;
 
-    @Column(name = "status_sinistro", nullable = false, length = 255)
+    @Column(name = "STATUS_SINISTRO", nullable = false, length = 20)
     private String statusSinistro;
 
     @ManyToOne
-    @JoinColumn(name = "consulta_id_consulta", nullable = false)
+    @JoinColumn(name = "CONSULTA_ID_CONSULTA", nullable = false)
     private Consulta consulta;
 
-
-    public Long getIdSinistro() {
-        return idSinistro;
-    }
-
-    public void setIdSinistro(Long idSinistro) {
-        this.idSinistro = idSinistro;
-    }
-
-    public String getMotivoSinistro() {
-        return motivoSinistro;
-    }
-
-    public void setMotivoSinistro(String motivoSinistro) {
-        this.motivoSinistro = motivoSinistro;
-    }
-
-    public String getDataAbertura() {
-        return dataAbertura;
-    }
-
-    public void setDataAbertura(String dataAbertura) {
-        this.dataAbertura = dataAbertura;
-    }
-
-    public String getStatusSinistro() {
-        return statusSinistro;
-    }
-
-    public void setStatusSinistro(String statusSinistro) {
-        this.statusSinistro = statusSinistro;
-    }
-
-    public Consulta getConsulta() {
-        return consulta;
-    }
-
-    public void setConsulta(Consulta consulta) {
-        this.consulta = consulta;
-    }
 }

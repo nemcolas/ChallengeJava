@@ -1,99 +1,32 @@
 package com.example.ChallengeSprint1.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
-@Table(name = "ENDERECO")
+@Table(name = "CH_ENDERECO")
+@Data
 public class Endereco {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_endereco")
-    private Long idEndereco;
+    @Column(name = "COD_ENDERECO")
+    private Long codEndereco;
 
-    @Column(name = "cep", nullable = false, length = 15)
-    private String cep;
+    @Column(name = "NUMERO", nullable = false, length = 6)
+    private Long numero;
 
-    @Column(name = "estado", nullable = false, length = 50)
-    private String estado;
+    @Column(name = "CEP", nullable = false, length = 8)
+    private Long cep;
 
-    @Column(name = "cidade", nullable = false, length = 100)
-    private String cidade;
+    @Column(name = "REFERENCIA", length = 30)
+    private String referencia;
 
-    @Column(name = "bairro", nullable = false, length = 100)
-    private String bairro;
+    @ManyToOne
+    @JoinColumn(name = "COD_BAIRRO", nullable = false)
+    private Bairro bairro;
 
-    @Column(name = "rua", nullable = false, length = 255)
-    private String rua;
+    @Column(name = "LOGRADOURO", nullable = false, length = 30)
+    private String logradouro;
 
-    @Column(name = "numero", nullable = false, length = 10)
-    private String numero;
-
-    @Column(name = "complemento", length = 100)
-    private String complemento;
-
-    public Long getIdEndereco() {
-        return idEndereco;
-    }
-
-    public void setIdEndereco(Long idEndereco) {
-        this.idEndereco = idEndereco;
-    }
-
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public String getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
-
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
-    public String getRua() {
-        return rua;
-    }
-
-    public void setRua(String rua) {
-        this.rua = rua;
-    }
-
-    public String getNumero() {
-        return numero;
-    }
-
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
-
-    public String getComplemento() {
-        return complemento;
-    }
-
-    public void setComplemento(String complemento) {
-        this.complemento = complemento;
-    }
 }
 

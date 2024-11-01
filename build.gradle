@@ -33,6 +33,9 @@ dependencies {
 	// Driver Oracle
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
 
+	// Lombok
+	implementation 'org.projectlombok:lombok'
+
 	// Swagger/OpenAPI
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
 

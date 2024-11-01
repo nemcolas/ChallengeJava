@@ -1,92 +1,38 @@
 package com.example.ChallengeSprint1.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
+
 import java.util.Date;
 
 @Entity
-@Table(name = "consulta")
+@Table(name = "CH_CONSULTA")
+@Data
 public class Consulta {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_consulta")
+    @Column(name = "ID_CONSULTA")
     private Long idConsulta;
 
-
-    @Column(name = "data_consulta", nullable = false)
+    @Column(name = "DATA_CONSULTA", nullable = false, length = 20)
     private String dataConsulta;
 
-    @Column(name = "tipo_consulta", nullable = false, length = 100)
+    @Column(name = "TIPO_CONSULTA", nullable = false, length = 100)
     private String tipoConsulta;
 
-    @Column(name = "custo", nullable = false)
+    @Column(name = "CUSTO", nullable = false)
     private Float custo;
 
-    @Column(name = "status_sinistro", nullable = false, length = 20)
+    @Column(name = "STATUS_SINISTRO", nullable = false, length = 20)
     private String statusSinistro;
 
     @ManyToOne
-    @JoinColumn(name = "paciente_id_paciente", nullable = false)
+    @JoinColumn(name = "PACIENTE_ID_PACIENTE", nullable = false)
     private Paciente paciente;
 
     @ManyToOne
-    @JoinColumn(name = "dentista_id_dentista", nullable = false)
+    @JoinColumn(name = "DENTISTA_ID_DENTISTA", nullable = false)
     private Dentista dentista;
 
-    public Long getIdConsulta() {
-        return idConsulta;
-    }
-
-    public void setIdConsulta(Long idConsulta) {
-        this.idConsulta = idConsulta;
-    }
-
-    public String getDataConsulta() {
-        return dataConsulta;
-    }
-
-    public void setDataConsulta(String dataConsulta) {
-        this.dataConsulta = dataConsulta;
-    }
-
-    public String getTipoConsulta() {
-        return tipoConsulta;
-    }
-
-    public void setTipoConsulta(String tipoConsulta) {
-        this.tipoConsulta = tipoConsulta;
-    }
-
-    public Float getCusto() {
-        return custo;
-    }
-
-    public void setCusto(Float custo) {
-        this.custo = custo;
-    }
-
-    public String getStatusSinistro() {
-        return statusSinistro;
-    }
-
-    public void setStatusSinistro(String statusSinistro) {
-        this.statusSinistro = statusSinistro;
-    }
-
-    public Paciente getPaciente() {
-        return paciente;
-    }
-
-    public void setPaciente(Paciente paciente) {
-        this.paciente = paciente;
-    }
-
-    public Dentista getDentista() {
-        return dentista;
-    }
-
-    public void setDentista(Dentista dentista) {
-        this.dentista = dentista;
-    }
 }
 

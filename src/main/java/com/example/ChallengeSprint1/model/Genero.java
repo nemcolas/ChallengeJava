@@ -1,32 +1,18 @@
 package com.example.ChallengeSprint1.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
-@Table(name = "GENEROS")
+@Table(name = "CH_GENERO")
+@Data
 public class Genero {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_genero")
+    @Column(name = "ID_GENERO")
     private Long idGenero;
 
-    @Column(name = "descricao", nullable = false, length = 20)
+    @Column(name = "DESCRICAO", nullable = false, length = 20)
     private String descricao;
 
-    public Long getIdGenero() {
-        return idGenero;
-    }
-
-    public void setIdGenero(Long idGenero) {
-        this.idGenero = idGenero;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
 }
