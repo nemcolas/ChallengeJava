@@ -1,10 +1,9 @@
 package com.example.ChallengeSprint1.controller;
 
 import com.example.ChallengeSprint1.dto.EnderecoDTO;
-import com.example.ChallengeSprint1.dto.GeneroDTO;
 import com.example.ChallengeSprint1.model.Endereco;
 import com.example.ChallengeSprint1.repository.EnderecoRepository;
-import com.example.ChallengeSprint1.service.EnderecoMapper;
+import com.example.ChallengeSprint1.mapper.EnderecoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

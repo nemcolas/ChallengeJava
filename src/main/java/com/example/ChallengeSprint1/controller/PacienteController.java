@@ -3,7 +3,7 @@ package com.example.ChallengeSprint1.controller;
 import com.example.ChallengeSprint1.dto.PacienteDTO;
 import com.example.ChallengeSprint1.model.Paciente;
 import com.example.ChallengeSprint1.repository.PacienteRepository;
-import com.example.ChallengeSprint1.service.PacienteMapper;
+import com.example.ChallengeSprint1.mapper.PacienteMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

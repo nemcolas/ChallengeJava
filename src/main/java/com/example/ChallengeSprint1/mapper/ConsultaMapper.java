@@ -1,4 +1,4 @@
-package com.example.ChallengeSprint1.service;
+package com.example.ChallengeSprint1.mapper;
 
 import com.example.ChallengeSprint1.dto.ConsultaDTO;
 import com.example.ChallengeSprint1.model.Consulta;
@@ -7,9 +7,9 @@ import com.example.ChallengeSprint1.model.Paciente;
 import com.example.ChallengeSprint1.repository.DentistaRepository;
 import com.example.ChallengeSprint1.repository.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class ConsultaMapper {
 
     @Autowired

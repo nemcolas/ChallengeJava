@@ -3,7 +3,7 @@ package com.example.ChallengeSprint1.controller;
 import com.example.ChallengeSprint1.dto.BairroDTO;
 import com.example.ChallengeSprint1.model.Bairro;
 import com.example.ChallengeSprint1.repository.BairroRepository;
-import com.example.ChallengeSprint1.service.BairroMapper;
+import com.example.ChallengeSprint1.mapper.BairroMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

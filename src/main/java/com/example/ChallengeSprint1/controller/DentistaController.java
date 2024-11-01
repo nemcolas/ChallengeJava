@@ -1,10 +1,9 @@
 package com.example.ChallengeSprint1.controller;
 
 import com.example.ChallengeSprint1.dto.DentistaDTO;
-import com.example.ChallengeSprint1.dto.GeneroDTO;
 import com.example.ChallengeSprint1.model.Dentista;
 import com.example.ChallengeSprint1.repository.DentistaRepository;
-import com.example.ChallengeSprint1.service.DentistaMapper;
+import com.example.ChallengeSprint1.mapper.DentistaMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

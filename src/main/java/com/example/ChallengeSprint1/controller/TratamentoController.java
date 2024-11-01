@@ -1,12 +1,10 @@
 package com.example.ChallengeSprint1.controller;
 
 
-import com.example.ChallengeSprint1.dto.GeneroDTO;
 import com.example.ChallengeSprint1.dto.TratamentoDTO;
-import com.example.ChallengeSprint1.exception.ValidationExceptionHandler;
 import com.example.ChallengeSprint1.model.Tratamento;
 import com.example.ChallengeSprint1.repository.TratamentoRepository;
-import com.example.ChallengeSprint1.service.TratamentoMapper;
+import com.example.ChallengeSprint1.mapper.TratamentoMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,11 +1,11 @@
-package com.example.ChallengeSprint1.service;
+package com.example.ChallengeSprint1.mapper;
 
 
 import com.example.ChallengeSprint1.dto.GeneroDTO;
 import com.example.ChallengeSprint1.model.Genero;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class GeneroMapper {
 
     // Converte GeneroDTO para Genero (entidade)

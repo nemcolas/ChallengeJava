@@ -3,7 +3,7 @@ package com.example.ChallengeSprint1.controller;
 import com.example.ChallengeSprint1.dto.GeneroDTO;
 import com.example.ChallengeSprint1.model.Genero;
 import com.example.ChallengeSprint1.repository.GeneroRepository;
-import com.example.ChallengeSprint1.service.GeneroMapper;
+import com.example.ChallengeSprint1.mapper.GeneroMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

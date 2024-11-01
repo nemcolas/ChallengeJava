@@ -1,10 +1,10 @@
-package com.example.ChallengeSprint1.service;
+package com.example.ChallengeSprint1.mapper;
 
 import com.example.ChallengeSprint1.dto.PaisDTO;
 import com.example.ChallengeSprint1.model.Pais;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class PaisMapper {
 
     // Converte PaisDTO para Pais (entidade)

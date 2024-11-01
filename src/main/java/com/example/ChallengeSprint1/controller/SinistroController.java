@@ -1,11 +1,10 @@
 package com.example.ChallengeSprint1.controller;
 
 
-import com.example.ChallengeSprint1.dto.GeneroDTO;
 import com.example.ChallengeSprint1.dto.SinistroDTO;
 import com.example.ChallengeSprint1.model.Sinistro;
 import com.example.ChallengeSprint1.repository.SinistroRepository;
-import com.example.ChallengeSprint1.service.SinistroMapper;
+import com.example.ChallengeSprint1.mapper.SinistroMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
