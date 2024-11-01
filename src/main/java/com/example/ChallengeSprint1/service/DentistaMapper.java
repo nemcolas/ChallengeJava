@@ -41,7 +41,7 @@ public class DentistaMapper {
         dentistaDTO.setCro(dentista.getCro());
         dentistaDTO.setEspecialidade(dentista.getEspecialidade());
         dentistaDTO.setGenero(dentista.getGenero().getIdGenero());
-        dentistaDTO.setEndereco(dentista.getEndereco().getIdEndereco());
+        dentistaDTO.setEndereco(dentista.getEndereco().getCodEndereco());
         return dentistaDTO;
     }
 }

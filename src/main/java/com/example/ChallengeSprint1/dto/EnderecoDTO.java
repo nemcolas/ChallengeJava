@@ -10,6 +10,6 @@ public class EnderecoDTO {
     private Long bairro;
     private String logradouro;
     private Long numero;
-    private String REFERENCIA;
+    private String referencia;
 
 }

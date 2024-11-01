@@ -4,10 +4,8 @@ package com.example.ChallengeSprint1.service;
 
 import com.example.ChallengeSprint1.dto.SinistroDTO;
 import com.example.ChallengeSprint1.model.Consulta;
-import com.example.ChallengeSprint1.model.Paciente;
 import com.example.ChallengeSprint1.model.Sinistro;
 import com.example.ChallengeSprint1.repository.ConsultaRepository;
-import com.example.ChallengeSprint1.repository.EnderecoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,14 +1,11 @@
 package com.example.ChallengeSprint1.service;
 
 import com.example.ChallengeSprint1.dto.PacienteDTO;
-import com.example.ChallengeSprint1.model.Dentista;
 import com.example.ChallengeSprint1.model.Endereco;
 import com.example.ChallengeSprint1.model.Genero;
 import com.example.ChallengeSprint1.model.Paciente;
-import com.example.ChallengeSprint1.repository.DentistaRepository;
 import com.example.ChallengeSprint1.repository.EnderecoRepository;
 import com.example.ChallengeSprint1.repository.GeneroRepository;
-import com.example.ChallengeSprint1.repository.PacienteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +26,7 @@ public class PacienteMapper {
         pacienteDTO.setCpf(paciente.getCpf());
         pacienteDTO.setDataNascimento(paciente.getDataNascimento());
         pacienteDTO.setGenero(paciente.getGenero().getIdGenero());
-        pacienteDTO.setEndereco(paciente.getEndereco().getIdEndereco());
+        pacienteDTO.setEndereco(paciente.getEndereco().getCodEndereco());
         return pacienteDTO;
     }
 

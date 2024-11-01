@@ -2,36 +2,40 @@ package com.example.ChallengeSprint1.service;
 
 
 import com.example.ChallengeSprint1.dto.EnderecoDTO;
+import com.example.ChallengeSprint1.model.Bairro;
 import com.example.ChallengeSprint1.model.Endereco;
+import com.example.ChallengeSprint1.repository.BairroRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EnderecoMapper {
 
+    @Autowired
+    private BairroRepository bairroRepository;
+
     // Converte EnderecoDTO para Endereco (entidade)
     public Endereco dtoToEntity(EnderecoDTO enderecoDTO) {
         Endereco endereco = new Endereco();
-        enderecoDTO.setCep(endereco.getCep());
-        endereco.setEstado(enderecoDTO.getEstado());
-        endereco.setCidade(enderecoDTO.getCidade());
-        endereco.setBairro(enderecoDTO.getBairro());
-        endereco.setRua(enderecoDTO.getRua());
+        endereco.setCep(endereco.getCep());
+        Bairro bairro = bairroRepository.findById(enderecoDTO.getBairro())
+                .orElseThrow(() -> new RuntimeException("Bairro não encontrado"));
+        endereco.setBairro(bairro);
+        endereco.setLogradouro(enderecoDTO.getLogradouro());
         endereco.setNumero(enderecoDTO.getNumero());
-        endereco.setComplemento(enderecoDTO.getComplemento());
+        endereco.setReferencia(enderecoDTO.getReferencia());
         return endereco;
     }
 
     // Converte Endereco (entidade) para EnderecoDTO
     public EnderecoDTO entityToDTO(Endereco endereco) {
         EnderecoDTO enderecoDTO = new EnderecoDTO();
-        enderecoDTO.setId(endereco.getIdEndereco());
+        enderecoDTO.setId(endereco.getCodEndereco());
         enderecoDTO.setCep(endereco.getCep());
-        enderecoDTO.setEstado(endereco.getEstado());
-        enderecoDTO.setCidade(endereco.getCidade());
-        enderecoDTO.setBairro(endereco.getBairro());
-        enderecoDTO.setRua(endereco.getRua());
+        enderecoDTO.setBairro(endereco.getBairro().getCodBairro());
+        enderecoDTO.setLogradouro(endereco.getLogradouro());
         enderecoDTO.setNumero(endereco.getNumero());
-        enderecoDTO.setComplemento(endereco.getComplemento());
+        enderecoDTO.setReferencia(endereco.getReferencia());
         return enderecoDTO;
     }
 }
