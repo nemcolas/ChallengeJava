@@ -43,12 +43,11 @@ public class DentistaController {
             @ApiResponse(responseCode = "400", description = "Atributos inválidos",
                     content = @Content(schema = @Schema()))
     })
-    public ResponseEntity<EntityModel<DentistaDTO>> criarDentista(@Valid @RequestBody DentistaDTO dentistaDTO) {
+    public ResponseEntity<EntityModel<Dentista>> criarDentista(@Valid @RequestBody DentistaDTO dentistaDTO) {
         Dentista dentistaConvertido = dentistaMapper.dtoToEntity(dentistaDTO);
         Dentista dentistaCriado = dentistaRepository.save(dentistaConvertido);
-        DentistaDTO dentistaResponse = dentistaMapper.entityToDTO(dentistaCriado);
-        EntityModel<DentistaDTO> resource = EntityModel.of(dentistaResponse,
-                linkTo(methodOn(DentistaController.class).getDentistaById(dentistaResponse.getId())).withSelfRel());
+        EntityModel<Dentista> resource = EntityModel.of(dentistaCriado,
+                linkTo(methodOn(DentistaController.class).getDentistaById(dentistaCriado.getIdDentista())).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
@@ -59,19 +58,17 @@ public class DentistaController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Dentistas retornados com sucesso")
     })
-    public ResponseEntity<CollectionModel<EntityModel<DentistaDTO>>> getAllDentistas() {
+    public ResponseEntity<CollectionModel<EntityModel<Dentista>>> getAllDentistas() {
         List<Dentista> listaDentistas = dentistaRepository.findAll();
         if (listaDentistas.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<EntityModel<DentistaDTO>> dentistasComLinks = listaDentistas.stream()
-                .map(dentista -> {
-                    DentistaDTO dentistaDTO = dentistaMapper.entityToDTO(dentista);
-                    return EntityModel.of(dentistaDTO,
-                            linkTo(methodOn(DentistaController.class).getDentistaById(dentistaDTO.getId())).withSelfRel());
-                })
+        List<EntityModel<Dentista>> dentistasComLinks = listaDentistas.stream()
+                .map(dentista -> EntityModel.of(dentista,
+                            linkTo(methodOn(DentistaController.class).getDentistaById(dentista.getIdDentista())).withSelfRel())
+                )
                 .collect(Collectors.toList());
-        CollectionModel<EntityModel<DentistaDTO>> collectionModel = CollectionModel.of(dentistasComLinks,
+        CollectionModel<EntityModel<Dentista>> collectionModel = CollectionModel.of(dentistasComLinks,
                 linkTo(methodOn(DentistaController.class).getAllDentistas()).withSelfRel());
         return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
@@ -83,14 +80,14 @@ public class DentistaController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Dentista encontrado com sucesso")
     })
-    public ResponseEntity<EntityModel<DentistaDTO>> getDentistaById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<Dentista>> getDentistaById(@PathVariable Long id) {
         Optional<Dentista> dentistaSalvo = dentistaRepository.findById(id);
         if (dentistaSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        DentistaDTO dentistaResponse = dentistaMapper.entityToDTO(dentistaSalvo.get());
-        EntityModel<DentistaDTO> resource = EntityModel.of(dentistaResponse,
-                linkTo(methodOn(DentistaController.class).getDentistaById(dentistaResponse.getId())).withSelfRel());
+        Dentista dentista = dentistaSalvo.get();
+        EntityModel<Dentista> resource = EntityModel.of(dentista,
+                linkTo(methodOn(DentistaController.class).getDentistaById(id)).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
@@ -101,7 +98,7 @@ public class DentistaController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Dentista atualizado com sucesso")
     })
-    public ResponseEntity<EntityModel<DentistaDTO>> updateDentista(@PathVariable Long id, @Valid @RequestBody DentistaDTO dentistaDTO) {
+    public ResponseEntity<EntityModel<Dentista>> updateDentista(@PathVariable Long id, @Valid @RequestBody DentistaDTO dentistaDTO) {
         Optional<Dentista> dentistaSalvo = dentistaRepository.findById(id);
         if (dentistaSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -109,9 +106,8 @@ public class DentistaController {
         Dentista dentistaAtualizado = dentistaMapper.dtoToEntity(dentistaDTO);
         dentistaAtualizado.setIdDentista(id);
         Dentista dentistaSalvoAtualizado = dentistaRepository.save(dentistaAtualizado);
-        DentistaDTO dentistaResponse = dentistaMapper.entityToDTO(dentistaSalvoAtualizado);
-        EntityModel<DentistaDTO> resource = EntityModel.of(dentistaResponse,
-                linkTo(methodOn(DentistaController.class).getDentistaById(dentistaResponse.getId())).withSelfRel());
+        EntityModel<Dentista> resource = EntityModel.of(dentistaSalvoAtualizado,
+                linkTo(methodOn(DentistaController.class).getDentistaById(dentistaSalvoAtualizado.getIdDentista())).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 

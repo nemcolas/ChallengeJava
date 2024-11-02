@@ -43,12 +43,11 @@ public class EnderecoController {
             @ApiResponse(responseCode = "400", description = "Atributos inválidos",
                     content = @Content(schema = @Schema()))
     })
-    public ResponseEntity<EntityModel<EnderecoDTO>> criarEndereco(@Valid @RequestBody EnderecoDTO enderecoDTO) {
+    public ResponseEntity<EntityModel<Endereco>> criarEndereco(@Valid @RequestBody EnderecoDTO enderecoDTO) {
         Endereco enderecoConvertido = enderecoMapper.dtoToEntity(enderecoDTO);
         Endereco enderecoCriado = enderecoRepository.save(enderecoConvertido);
-        EnderecoDTO enderecoResponse = enderecoMapper.entityToDTO(enderecoCriado);
-        EntityModel<EnderecoDTO> resource = EntityModel.of(enderecoResponse,
-                linkTo(methodOn(EnderecoController.class).getEnderecoById(enderecoResponse.getId())).withSelfRel());
+        EntityModel<Endereco> resource = EntityModel.of(enderecoCriado,
+                linkTo(methodOn(EnderecoController.class).getEnderecoById(enderecoCriado.getCodEndereco())).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
@@ -59,19 +58,17 @@ public class EnderecoController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Enderecos retornados com sucesso")
     })
-    public ResponseEntity<CollectionModel<EntityModel<EnderecoDTO>>> getAllEnderecos() {
+    public ResponseEntity<CollectionModel<EntityModel<Endereco>>> getAllEnderecos() {
         List<Endereco> listaEnderecos = enderecoRepository.findAll();
         if (listaEnderecos.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<EntityModel<EnderecoDTO>> enderecosComLinks = listaEnderecos.stream()
-                .map(endereco -> {
-                    EnderecoDTO enderecoDTO = enderecoMapper.entityToDTO(endereco);
-                    return EntityModel.of(enderecoDTO,
-                            linkTo(methodOn(EnderecoController.class).getEnderecoById(enderecoDTO.getId())).withSelfRel());
-                })
+        List<EntityModel<Endereco>> enderecosComLinks = listaEnderecos.stream()
+                .map(endereco -> EntityModel.of(endereco,
+                            linkTo(methodOn(EnderecoController.class).getEnderecoById(endereco.getCodEndereco())).withSelfRel())
+                )
                 .collect(Collectors.toList());
-        CollectionModel<EntityModel<EnderecoDTO>> collectionModel = CollectionModel.of(enderecosComLinks,
+        CollectionModel<EntityModel<Endereco>> collectionModel = CollectionModel.of(enderecosComLinks,
                 linkTo(methodOn(EnderecoController.class).getAllEnderecos()).withSelfRel());
         return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
@@ -83,14 +80,14 @@ public class EnderecoController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Endereco encontrado com sucesso")
     })
-    public ResponseEntity<EntityModel<EnderecoDTO>> getEnderecoById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<Endereco>> getEnderecoById(@PathVariable Long id) {
         Optional<Endereco> enderecoSalvo = enderecoRepository.findById(id);
         if (enderecoSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        EnderecoDTO enderecoResponse = enderecoMapper.entityToDTO(enderecoSalvo.get());
-        EntityModel<EnderecoDTO> resource = EntityModel.of(enderecoResponse,
-                linkTo(methodOn(EnderecoController.class).getEnderecoById(enderecoResponse.getId())).withSelfRel());
+        Endereco endereco = enderecoSalvo.get();
+        EntityModel<Endereco> resource = EntityModel.of(endereco,
+                linkTo(methodOn(EnderecoController.class).getEnderecoById(id)).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
@@ -101,7 +98,7 @@ public class EnderecoController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Endereco atualizado com sucesso")
     })
-    public ResponseEntity<EntityModel<EnderecoDTO>> updateEndereco(@PathVariable Long id, @Valid @RequestBody EnderecoDTO enderecoDTO) {
+    public ResponseEntity<EntityModel<Endereco>> updateEndereco(@PathVariable Long id, @Valid @RequestBody EnderecoDTO enderecoDTO) {
         Optional<Endereco> enderecoSalvo = enderecoRepository.findById(id);
         if (enderecoSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -109,9 +106,8 @@ public class EnderecoController {
         Endereco enderecoAtualizado = enderecoMapper.dtoToEntity(enderecoDTO);
         enderecoAtualizado.setCodEndereco(id);
         Endereco enderecoSalvoAtualizado = enderecoRepository.save(enderecoAtualizado);
-        EnderecoDTO enderecoResponse = enderecoMapper.entityToDTO(enderecoSalvoAtualizado);
-        EntityModel<EnderecoDTO> resource = EntityModel.of(enderecoResponse,
-                linkTo(methodOn(EnderecoController.class).getEnderecoById(enderecoResponse.getId())).withSelfRel());
+        EntityModel<Endereco> resource = EntityModel.of(enderecoSalvoAtualizado,
+                linkTo(methodOn(EnderecoController.class).getEnderecoById(enderecoSalvoAtualizado.getCodEndereco())).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 

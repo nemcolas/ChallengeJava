@@ -43,12 +43,11 @@ public class ConsultaController {
             @ApiResponse(responseCode = "400", description = "Atributos inválidos",
                     content = @Content(schema = @Schema()))
     })
-    public ResponseEntity<EntityModel<ConsultaDTO>> criarConsulta(@Valid @RequestBody ConsultaDTO consultaDTO) {
+    public ResponseEntity<EntityModel<Consulta>> criarConsulta(@Valid @RequestBody ConsultaDTO consultaDTO) {
         Consulta consultaConvertida = consultaMapper.dtoToEntity(consultaDTO);
         Consulta consultaCriada = consultaRepository.save(consultaConvertida);
-        ConsultaDTO consultaResponse = consultaMapper.entityToDTO(consultaCriada);
-        EntityModel<ConsultaDTO> resource = EntityModel.of(consultaResponse,
-                linkTo(methodOn(ConsultaController.class).getConsultaById(consultaResponse.getId())).withSelfRel());
+        EntityModel<Consulta> resource = EntityModel.of(consultaCriada,
+                linkTo(methodOn(ConsultaController.class).getConsultaById(consultaCriada.getIdConsulta())).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
@@ -59,19 +58,17 @@ public class ConsultaController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Consultas retornadas com sucesso")
     })
-    public ResponseEntity<CollectionModel<EntityModel<ConsultaDTO>>> getAllConsultas() {
+    public ResponseEntity<CollectionModel<EntityModel<Consulta>>> getAllConsultas() {
         List<Consulta> listaConsultas = consultaRepository.findAll();
         if (listaConsultas.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<EntityModel<ConsultaDTO>> consultasComLinks = listaConsultas.stream()
-                .map(consulta -> {
-                    ConsultaDTO consultaDTO = consultaMapper.entityToDTO(consulta);
-                    return EntityModel.of(consultaDTO,
-                            linkTo(methodOn(ConsultaController.class).getConsultaById(consultaDTO.getId())).withSelfRel());
-                })
+        List<EntityModel<Consulta>> consultasComLinks = listaConsultas.stream()
+                .map(consulta -> EntityModel.of(consulta,
+                            linkTo(methodOn(ConsultaController.class).getConsultaById(consulta.getIdConsulta())).withSelfRel())
+                )
                 .collect(Collectors.toList());
-        CollectionModel<EntityModel<ConsultaDTO>> collectionModel = CollectionModel.of(consultasComLinks,
+        CollectionModel<EntityModel<Consulta>> collectionModel = CollectionModel.of(consultasComLinks,
                 linkTo(methodOn(ConsultaController.class).getAllConsultas()).withSelfRel());
         return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
@@ -83,14 +80,14 @@ public class ConsultaController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Consulta encontrada com sucesso")
     })
-    public ResponseEntity<EntityModel<ConsultaDTO>> getConsultaById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<Consulta>> getConsultaById(@PathVariable Long id) {
         Optional<Consulta> consultaSalva = consultaRepository.findById(id);
         if (consultaSalva.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        ConsultaDTO consultaResponse = consultaMapper.entityToDTO(consultaSalva.get());
-        EntityModel<ConsultaDTO> resource = EntityModel.of(consultaResponse,
-                linkTo(methodOn(ConsultaController.class).getConsultaById(consultaResponse.getId())).withSelfRel());
+        Consulta consulta = consultaSalva.get();
+        EntityModel<Consulta> resource = EntityModel.of(consulta,
+                linkTo(methodOn(ConsultaController.class).getConsultaById(id)).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
@@ -101,7 +98,7 @@ public class ConsultaController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Consulta atualizada com sucesso")
     })
-    public ResponseEntity<EntityModel<ConsultaDTO>> updateConsulta(@PathVariable Long id, @Valid @RequestBody ConsultaDTO consultaDTO) {
+    public ResponseEntity<EntityModel<Consulta>> updateConsulta(@PathVariable Long id, @Valid @RequestBody ConsultaDTO consultaDTO) {
         Optional<Consulta> consultaSalva = consultaRepository.findById(id);
         if (consultaSalva.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -109,9 +106,8 @@ public class ConsultaController {
         Consulta consultaAtualizada = consultaMapper.dtoToEntity(consultaDTO);
         consultaAtualizada.setIdConsulta(id);
         Consulta consultaSalvaAtualizada = consultaRepository.save(consultaAtualizada);
-        ConsultaDTO consultaResponse = consultaMapper.entityToDTO(consultaSalvaAtualizada);
-        EntityModel<ConsultaDTO> resource = EntityModel.of(consultaResponse,
-                linkTo(methodOn(ConsultaController.class).getConsultaById(consultaResponse.getId())).withSelfRel());
+        EntityModel<Consulta> resource = EntityModel.of(consultaSalvaAtualizada,
+                linkTo(methodOn(ConsultaController.class).getConsultaById(consultaSalvaAtualizada.getIdConsulta())).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 

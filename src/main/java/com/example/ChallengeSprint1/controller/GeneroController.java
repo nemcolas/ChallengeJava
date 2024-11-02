@@ -43,12 +43,11 @@ public class GeneroController {
             @ApiResponse(responseCode = "400", description = "Atributos inválidos",
                     content = @Content(schema = @Schema()))
     })
-    public ResponseEntity<EntityModel<GeneroDTO>> criarGenero(@Valid @RequestBody GeneroDTO generoDTO) {
+    public ResponseEntity<EntityModel<Genero>> criarGenero(@Valid @RequestBody GeneroDTO generoDTO) {
         Genero generoConvertido = generoMapper.dtoToEntity(generoDTO);
         Genero generoCriado = generoRepository.save(generoConvertido);
-        GeneroDTO generoResponse = generoMapper.entityToDTO(generoCriado);
-        EntityModel<GeneroDTO> resource = EntityModel.of(generoResponse,
-                linkTo(methodOn(GeneroController.class).getGeneroById(generoResponse.getId())).withSelfRel());
+        EntityModel<Genero> resource = EntityModel.of(generoCriado,
+                linkTo(methodOn(GeneroController.class).getGeneroById(generoCriado.getIdGenero())).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
@@ -59,19 +58,17 @@ public class GeneroController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Generos retornados com sucesso")
     })
-    public ResponseEntity<CollectionModel<EntityModel<GeneroDTO>>> getAllGeneros() {
+    public ResponseEntity<CollectionModel<EntityModel<Genero>>> getAllGeneros() {
         List<Genero> listaGeneros = generoRepository.findAll();
         if (listaGeneros.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<EntityModel<GeneroDTO>> generosComLinks = listaGeneros.stream()
-                .map(genero -> {
-                    GeneroDTO generoDTO = generoMapper.entityToDTO(genero);
-                    return EntityModel.of(generoDTO,
-                            linkTo(methodOn(GeneroController.class).getGeneroById(generoDTO.getId())).withSelfRel());
-                })
+        List<EntityModel<Genero>> generosComLinks = listaGeneros.stream()
+                .map(genero -> EntityModel.of(genero,
+                            linkTo(methodOn(GeneroController.class).getGeneroById(genero.getIdGenero())).withSelfRel())
+                )
                 .collect(Collectors.toList());
-        CollectionModel<EntityModel<GeneroDTO>> collectionModel = CollectionModel.of(generosComLinks,
+        CollectionModel<EntityModel<Genero>> collectionModel = CollectionModel.of(generosComLinks,
                 linkTo(methodOn(GeneroController.class).getAllGeneros()).withSelfRel());
         return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
@@ -83,13 +80,13 @@ public class GeneroController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Genero encontrado com sucesso")
     })
-    public ResponseEntity<EntityModel<GeneroDTO>> getGeneroById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<Genero>> getGeneroById(@PathVariable Long id) {
         Optional<Genero> generoSalvo = generoRepository.findById(id);
         if (generoSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        GeneroDTO generoResponse = generoMapper.entityToDTO(generoSalvo.get());
-        EntityModel<GeneroDTO> resource = EntityModel.of(generoResponse,
+        Genero genero = generoSalvo.get();
+        EntityModel<Genero> resource = EntityModel.of(genero,
                 linkTo(methodOn(GeneroController.class).getGeneroById(id)).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
@@ -101,7 +98,7 @@ public class GeneroController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Genero atualizado com sucesso")
     })
-    public ResponseEntity<EntityModel<GeneroDTO>> updateGenero(@PathVariable Long id, @Valid @RequestBody GeneroDTO generoDTO) {
+    public ResponseEntity<EntityModel<Genero>> updateGenero(@PathVariable Long id, @Valid @RequestBody GeneroDTO generoDTO) {
         Optional<Genero> generoSalvo = generoRepository.findById(id);
         if (generoSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -109,9 +106,8 @@ public class GeneroController {
         Genero generoAtualizado = generoMapper.dtoToEntity(generoDTO);
         generoAtualizado.setIdGenero(id);
         Genero generoSalvoAtualizado = generoRepository.save(generoAtualizado);
-        GeneroDTO generoResponse = generoMapper.entityToDTO(generoSalvoAtualizado);
-        EntityModel<GeneroDTO> resource = EntityModel.of(generoResponse,
-                linkTo(methodOn(GeneroController.class).getGeneroById(id)).withSelfRel());
+        EntityModel<Genero> resource = EntityModel.of(generoSalvoAtualizado,
+                linkTo(methodOn(GeneroController.class).getGeneroById(generoSalvoAtualizado.getIdGenero())).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 

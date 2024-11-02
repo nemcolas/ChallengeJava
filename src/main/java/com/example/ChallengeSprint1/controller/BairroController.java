@@ -43,12 +43,11 @@ public class BairroController {
             @ApiResponse(responseCode = "400", description = "Atributos inválidos",
                     content = @Content(schema = @Schema()))
     })
-    public ResponseEntity<EntityModel<BairroDTO>> criarBairro(@Valid @RequestBody BairroDTO bairroDTO) {
+    public ResponseEntity<EntityModel<Bairro>> criarBairro(@Valid @RequestBody BairroDTO bairroDTO) {
         Bairro bairroConvertido = bairroMapper.dtoToEntity(bairroDTO);
         Bairro bairroCriado = bairroRepository.save(bairroConvertido);
-        BairroDTO bairroResponse = bairroMapper.entityToDTO(bairroCriado);
-        EntityModel<BairroDTO> resource = EntityModel.of(bairroResponse,
-                linkTo(methodOn(BairroController.class).getBairroById(bairroResponse.getId())).withSelfRel());
+        EntityModel<Bairro> resource = EntityModel.of(bairroCriado,
+                linkTo(methodOn(BairroController.class).getBairroById(bairroCriado.getCodBairro())).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
@@ -59,19 +58,17 @@ public class BairroController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Bairros retornados com sucesso")
     })
-    public ResponseEntity<CollectionModel<EntityModel<BairroDTO>>> getAllBairros() {
+    public ResponseEntity<CollectionModel<EntityModel<Bairro>>> getAllBairros() {
         List<Bairro> listaBairros = bairroRepository.findAll();
         if (listaBairros.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<EntityModel<BairroDTO>> bairrosComLinks = listaBairros.stream()
-                .map(bairro -> {
-                    BairroDTO bairroDTO = bairroMapper.entityToDTO(bairro);
-                    return EntityModel.of(bairroDTO,
-                            linkTo(methodOn(BairroController.class).getBairroById(bairroDTO.getId())).withSelfRel());
-                })
+        List<EntityModel<Bairro>> bairrosComLinks = listaBairros.stream()
+                .map(bairro -> EntityModel.of(bairro,
+                            linkTo(methodOn(BairroController.class).getBairroById(bairro.getCodBairro())).withSelfRel())
+                )
                 .collect(Collectors.toList());
-        CollectionModel<EntityModel<BairroDTO>> collectionModel = CollectionModel.of(bairrosComLinks,
+        CollectionModel<EntityModel<Bairro>> collectionModel = CollectionModel.of(bairrosComLinks,
                 linkTo(methodOn(BairroController.class).getAllBairros()).withSelfRel());
         return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
@@ -83,14 +80,14 @@ public class BairroController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Bairro encontrado com sucesso")
     })
-    public ResponseEntity<EntityModel<BairroDTO>> getBairroById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<Bairro>> getBairroById(@PathVariable Long id) {
         Optional<Bairro> bairroSalvo = bairroRepository.findById(id);
         if (bairroSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        BairroDTO bairroResponse = bairroMapper.entityToDTO(bairroSalvo.get());
-        EntityModel<BairroDTO> resource = EntityModel.of(bairroResponse,
-                linkTo(methodOn(BairroController.class).getBairroById(bairroResponse.getId())).withSelfRel());
+        Bairro bairro = bairroSalvo.get();
+        EntityModel<Bairro> resource = EntityModel.of(bairro,
+                linkTo(methodOn(BairroController.class).getBairroById(id)).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
@@ -101,7 +98,7 @@ public class BairroController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Bairro atualizado com sucesso")
     })
-    public ResponseEntity<EntityModel<BairroDTO>> updateBairro(@PathVariable Long id, @Valid @RequestBody BairroDTO bairroDTO) {
+    public ResponseEntity<EntityModel<Bairro>> updateBairro(@PathVariable Long id, @Valid @RequestBody BairroDTO bairroDTO) {
         Optional<Bairro> bairroSalvo = bairroRepository.findById(id);
         if (bairroSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -109,9 +106,8 @@ public class BairroController {
         Bairro bairroAtualizado = bairroMapper.dtoToEntity(bairroDTO);
         bairroAtualizado.setCodBairro(id);
         Bairro bairroSalvoAtualizado = bairroRepository.save(bairroAtualizado);
-        BairroDTO bairroResponse = bairroMapper.entityToDTO(bairroSalvoAtualizado);
-        EntityModel<BairroDTO> resource = EntityModel.of(bairroResponse,
-                linkTo(methodOn(BairroController.class).getBairroById(bairroResponse.getId())).withSelfRel());
+        EntityModel<Bairro> resource = EntityModel.of(bairroSalvoAtualizado,
+                linkTo(methodOn(BairroController.class).getBairroById(bairroSalvoAtualizado.getCodBairro())).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 

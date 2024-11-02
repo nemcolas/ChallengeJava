@@ -43,12 +43,11 @@ public class PaisController {
             @ApiResponse(responseCode = "400", description = "Atributos inválidos",
                     content = @Content(schema = @Schema()))
     })
-    public ResponseEntity<EntityModel<PaisDTO>> criarPais(@Valid @RequestBody PaisDTO paisDTO) {
+    public ResponseEntity<EntityModel<Pais>> criarPais(@Valid @RequestBody PaisDTO paisDTO) {
         Pais paisConvertido = paisMapper.dtoToEntity(paisDTO);
         Pais paisCriado = paisRepository.save(paisConvertido);
-        PaisDTO paisResponse = paisMapper.entityToDTO(paisCriado);
-        EntityModel<PaisDTO> resource = EntityModel.of(paisResponse,
-                linkTo(methodOn(PaisController.class).getPaisById(paisResponse.getId())).withSelfRel());
+        EntityModel<Pais> resource = EntityModel.of(paisCriado,
+                linkTo(methodOn(PaisController.class).getPaisById(paisCriado.getCodPais())).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
@@ -59,19 +58,17 @@ public class PaisController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Paises retornados com sucesso")
     })
-    public ResponseEntity<CollectionModel<EntityModel<PaisDTO>>> getAllPaises() {
+    public ResponseEntity<CollectionModel<EntityModel<Pais>>> getAllPaises() {
         List<Pais> listaPaises = paisRepository.findAll();
         if (listaPaises.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<EntityModel<PaisDTO>> paisesComLinks = listaPaises.stream()
-                .map(pais -> {
-                    PaisDTO paisDTO = paisMapper.entityToDTO(pais);
-                    return EntityModel.of(paisDTO,
-                            linkTo(methodOn(PaisController.class).getPaisById(paisDTO.getId())).withSelfRel());
-                })
+        List<EntityModel<Pais>> paisesComLinks = listaPaises.stream()
+                .map(pais -> EntityModel.of(pais,
+                            linkTo(methodOn(PaisController.class).getPaisById(pais.getCodPais())).withSelfRel())
+                )
                 .collect(Collectors.toList());
-        CollectionModel<EntityModel<PaisDTO>> collectionModel = CollectionModel.of(paisesComLinks,
+        CollectionModel<EntityModel<Pais>> collectionModel = CollectionModel.of(paisesComLinks,
                 linkTo(methodOn(PaisController.class).getAllPaises()).withSelfRel());
         return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
@@ -83,13 +80,13 @@ public class PaisController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Pais encontrado com sucesso")
     })
-    public ResponseEntity<EntityModel<PaisDTO>> getPaisById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<Pais>> getPaisById(@PathVariable Long id) {
         Optional<Pais> paisSalvo = paisRepository.findById(id);
         if (paisSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        PaisDTO paisResponse = paisMapper.entityToDTO(paisSalvo.get());
-        EntityModel<PaisDTO> resource = EntityModel.of(paisResponse,
+        Pais pais = paisSalvo.get();
+        EntityModel<Pais> resource = EntityModel.of(pais,
                 linkTo(methodOn(PaisController.class).getPaisById(id)).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
@@ -101,7 +98,7 @@ public class PaisController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Pais atualizado com sucesso")
     })
-    public ResponseEntity<EntityModel<PaisDTO>> updatePais(@PathVariable Long id, @Valid @RequestBody PaisDTO paisDTO) {
+    public ResponseEntity<EntityModel<Pais>> updatePais(@PathVariable Long id, @Valid @RequestBody PaisDTO paisDTO) {
         Optional<Pais> paisSalvo = paisRepository.findById(id);
         if (paisSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -109,9 +106,8 @@ public class PaisController {
         Pais paisAtualizado = paisMapper.dtoToEntity(paisDTO);
         paisAtualizado.setCodPais(id);
         Pais paisSalvoAtualizado = paisRepository.save(paisAtualizado);
-        PaisDTO paisResponse = paisMapper.entityToDTO(paisSalvoAtualizado);
-        EntityModel<PaisDTO> resource = EntityModel.of(paisResponse,
-                linkTo(methodOn(PaisController.class).getPaisById(id)).withSelfRel());
+        EntityModel<Pais> resource = EntityModel.of(paisSalvoAtualizado,
+                linkTo(methodOn(PaisController.class).getPaisById(paisSalvoAtualizado.getCodPais())).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 

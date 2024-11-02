@@ -43,12 +43,11 @@ public class CidadeController {
             @ApiResponse(responseCode = "400", description = "Atributos inválidos",
                     content = @Content(schema = @Schema()))
     })
-    public ResponseEntity<EntityModel<CidadeDTO>> criarCidade(@Valid @RequestBody CidadeDTO cidadeDTO) {
+    public ResponseEntity<EntityModel<Cidade>> criarCidade(@Valid @RequestBody CidadeDTO cidadeDTO) {
         Cidade cidadeConvertida = cidadeMapper.dtoToEntity(cidadeDTO);
         Cidade cidadeCriada = cidadeRepository.save(cidadeConvertida);
-        CidadeDTO cidadeResponse = cidadeMapper.entityToDTO(cidadeCriada);
-        EntityModel<CidadeDTO> resource = EntityModel.of(cidadeResponse,
-                linkTo(methodOn(CidadeController.class).getCidadeById(cidadeResponse.getId())).withSelfRel());
+        EntityModel<Cidade> resource = EntityModel.of(cidadeCriada,
+                linkTo(methodOn(CidadeController.class).getCidadeById(cidadeCriada.getCodCidade())).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
@@ -59,19 +58,17 @@ public class CidadeController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Cidades retornadas com sucesso")
     })
-    public ResponseEntity<CollectionModel<EntityModel<CidadeDTO>>> getAllCidades() {
+    public ResponseEntity<CollectionModel<EntityModel<Cidade>>> getAllCidades() {
         List<Cidade> listaCidades = cidadeRepository.findAll();
         if (listaCidades.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<EntityModel<CidadeDTO>> cidadesComLinks = listaCidades.stream()
-                .map(cidade -> {
-                    CidadeDTO cidadeDTO = cidadeMapper.entityToDTO(cidade);
-                    return EntityModel.of(cidadeDTO,
-                            linkTo(methodOn(CidadeController.class).getCidadeById(cidadeDTO.getId())).withSelfRel());
-                })
+        List<EntityModel<Cidade>> cidadesComLinks = listaCidades.stream()
+                .map(cidade -> EntityModel.of(cidade,
+                            linkTo(methodOn(CidadeController.class).getCidadeById(cidade.getCodCidade())).withSelfRel())
+                )
                 .collect(Collectors.toList());
-        CollectionModel<EntityModel<CidadeDTO>> collectionModel = CollectionModel.of(cidadesComLinks,
+        CollectionModel<EntityModel<Cidade>> collectionModel = CollectionModel.of(cidadesComLinks,
                 linkTo(methodOn(CidadeController.class).getAllCidades()).withSelfRel());
         return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
@@ -83,14 +80,14 @@ public class CidadeController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Cidade encontrada com sucesso")
     })
-    public ResponseEntity<EntityModel<CidadeDTO>> getCidadeById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<Cidade>> getCidadeById(@PathVariable Long id) {
         Optional<Cidade> cidadeSalva = cidadeRepository.findById(id);
         if (cidadeSalva.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        CidadeDTO cidadeResponse = cidadeMapper.entityToDTO(cidadeSalva.get());
-        EntityModel<CidadeDTO> resource = EntityModel.of(cidadeResponse,
-                linkTo(methodOn(CidadeController.class).getCidadeById(cidadeResponse.getId())).withSelfRel());
+        Cidade cidade = cidadeSalva.get();
+        EntityModel<Cidade> resource = EntityModel.of(cidade,
+                linkTo(methodOn(CidadeController.class).getCidadeById(id)).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
@@ -101,7 +98,7 @@ public class CidadeController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Cidade atualizada com sucesso")
     })
-    public ResponseEntity<EntityModel<CidadeDTO>> updateCidade(@PathVariable Long id, @Valid @RequestBody CidadeDTO cidadeDTO) {
+    public ResponseEntity<EntityModel<Cidade>> updateCidade(@PathVariable Long id, @Valid @RequestBody CidadeDTO cidadeDTO) {
         Optional<Cidade> cidadeSalva = cidadeRepository.findById(id);
         if (cidadeSalva.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -109,9 +106,8 @@ public class CidadeController {
         Cidade cidadeAtualizada = cidadeMapper.dtoToEntity(cidadeDTO);
         cidadeAtualizada.setCodCidade(id);
         Cidade cidadeSalvaAtualizada = cidadeRepository.save(cidadeAtualizada);
-        CidadeDTO cidadeResponse = cidadeMapper.entityToDTO(cidadeSalvaAtualizada);
-        EntityModel<CidadeDTO> resource = EntityModel.of(cidadeResponse,
-                linkTo(methodOn(CidadeController.class).getCidadeById(cidadeResponse.getId())).withSelfRel());
+        EntityModel<Cidade> resource = EntityModel.of(cidadeSalvaAtualizada,
+                linkTo(methodOn(CidadeController.class).getCidadeById(cidadeSalvaAtualizada.getCodCidade())).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 

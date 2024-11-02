@@ -44,13 +44,11 @@ public class PacienteController {
                     content = @Content(schema = @Schema()))
     })
     @PostMapping
-    public ResponseEntity<EntityModel<PacienteDTO>> createPaciente(@Valid @RequestBody PacienteDTO pacienteDTO) {
+    public ResponseEntity<EntityModel<Paciente>> createPaciente(@Valid @RequestBody PacienteDTO pacienteDTO) {
         Paciente pacienteConvertido = pacienteMapper.dtoToEntity(pacienteDTO);
         Paciente pacienteCriado = pacienteRepository.save(pacienteConvertido);
-        PacienteDTO pacienteResponse;
-        pacienteResponse = pacienteMapper.entityToDTO(pacienteCriado);
-        EntityModel<PacienteDTO> resource = EntityModel.of(pacienteResponse,
-                linkTo(methodOn(PacienteController.class).getPacienteById(pacienteResponse.getId())).withSelfRel());
+        EntityModel<Paciente> resource = EntityModel.of(pacienteCriado,
+                linkTo(methodOn(PacienteController.class).getPacienteById(pacienteCriado.getIdPaciente())).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
@@ -62,24 +60,17 @@ public class PacienteController {
             @ApiResponse(responseCode = "200", description = "Pacientes retornados com sucesso")
     })
     @GetMapping
-    public ResponseEntity<CollectionModel<EntityModel<PacienteDTO>>> getAllPacientes() {
+    public ResponseEntity<CollectionModel<EntityModel<Paciente>>> getAllPacientes() {
         List<Paciente> listaPacientes = pacienteRepository.findAll();
         if (listaPacientes.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<EntityModel<PacienteDTO>> pacientesComLinks;
-        try {
-            pacientesComLinks = listaPacientes.stream()
-                    .map(paciente -> {
-                        PacienteDTO pacienteDTO = pacienteMapper.entityToDTO(paciente);
-                        return EntityModel.of(pacienteDTO,
-                                linkTo(methodOn(PacienteController.class).getPacienteById(pacienteDTO.getId())).withSelfRel());
-                    })
-                    .collect(Collectors.toList());
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-        CollectionModel<EntityModel<PacienteDTO>> collectionModel = CollectionModel.of(pacientesComLinks,
+        List<EntityModel<Paciente>> pacientesComLinks = listaPacientes.stream()
+                .map(paciente -> EntityModel.of(paciente,
+                            linkTo(methodOn(PacienteController.class).getPacienteById(paciente.getIdPaciente())).withSelfRel())
+                )
+                .collect(Collectors.toList());
+        CollectionModel<EntityModel<Paciente>> collectionModel = CollectionModel.of(pacientesComLinks,
                 linkTo(methodOn(PacienteController.class).getAllPacientes()).withSelfRel());
         return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
@@ -92,15 +83,14 @@ public class PacienteController {
             @ApiResponse(responseCode = "200", description = "Paciente encontrado com sucesso")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<EntityModel<PacienteDTO>> getPacienteById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<Paciente>> getPacienteById(@PathVariable Long id) {
         Optional<Paciente> pacienteSalvo = pacienteRepository.findById(id);
         if (pacienteSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        PacienteDTO pacienteResponse;
-        pacienteResponse = pacienteMapper.entityToDTO(pacienteSalvo.get());
-        EntityModel<PacienteDTO> resource = EntityModel.of(pacienteResponse,
-                linkTo(methodOn(PacienteController.class).getPacienteById(pacienteResponse.getId())).withSelfRel());
+        Paciente paciente = pacienteSalvo.get();
+        EntityModel<Paciente> resource = EntityModel.of(paciente,
+                linkTo(methodOn(PacienteController.class).getPacienteById(id)).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
@@ -112,7 +102,7 @@ public class PacienteController {
             @ApiResponse(responseCode = "200", description = "Paciente atualizado com sucesso")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<EntityModel<PacienteDTO>> updatePaciente(@PathVariable Long id, @Valid @RequestBody PacienteDTO pacienteDTO) {
+    public ResponseEntity<EntityModel<Paciente>> updatePaciente(@PathVariable Long id, @Valid @RequestBody PacienteDTO pacienteDTO) {
         Optional<Paciente> pacienteSalvo = pacienteRepository.findById(id);
         if (pacienteSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -120,10 +110,8 @@ public class PacienteController {
         Paciente pacienteAtualizado = pacienteMapper.dtoToEntity(pacienteDTO);
         pacienteAtualizado.setIdPaciente(id);
         Paciente pacienteSalvoAtualizado = pacienteRepository.save(pacienteAtualizado);
-        PacienteDTO pacienteResponse;
-        pacienteResponse = pacienteMapper.entityToDTO(pacienteSalvoAtualizado);
-        EntityModel<PacienteDTO> resource = EntityModel.of(pacienteResponse,
-                linkTo(methodOn(PacienteController.class).getPacienteById(pacienteResponse.getId())).withSelfRel());
+        EntityModel<Paciente> resource = EntityModel.of(pacienteSalvoAtualizado,
+                linkTo(methodOn(PacienteController.class).getPacienteById(pacienteSalvoAtualizado.getIdPaciente())).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 

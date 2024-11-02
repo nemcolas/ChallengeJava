@@ -43,12 +43,11 @@ public class EstadoController {
             @ApiResponse(responseCode = "400", description = "Atributos inválidos",
                     content = @Content(schema = @Schema()))
     })
-    public ResponseEntity<EntityModel<EstadoDTO>> criarEstado(@Valid @RequestBody EstadoDTO estadoDTO) {
+    public ResponseEntity<EntityModel<Estado>> criarEstado(@Valid @RequestBody EstadoDTO estadoDTO) {
         Estado estadoConvertido = estadoMapper.dtoToEntity(estadoDTO);
         Estado estadoCriado = estadoRepository.save(estadoConvertido);
-        EstadoDTO estadoResponse = estadoMapper.entityToDTO(estadoCriado);
-        EntityModel<EstadoDTO> resource = EntityModel.of(estadoResponse,
-                linkTo(methodOn(EstadoController.class).getEstadoById(estadoResponse.getId())).withSelfRel());
+        EntityModel<Estado> resource = EntityModel.of(estadoCriado,
+                linkTo(methodOn(EstadoController.class).getEstadoById(estadoCriado.getCodEstado())).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
@@ -59,19 +58,17 @@ public class EstadoController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Estados retornados com sucesso")
     })
-    public ResponseEntity<CollectionModel<EntityModel<EstadoDTO>>> getAllEstados() {
+    public ResponseEntity<CollectionModel<EntityModel<Estado>>> getAllEstados() {
         List<Estado> listaEstados = estadoRepository.findAll();
         if (listaEstados.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<EntityModel<EstadoDTO>> estadosComLinks = listaEstados.stream()
-                .map(estado -> {
-                    EstadoDTO estadoDTO = estadoMapper.entityToDTO(estado);
-                    return EntityModel.of(estadoDTO,
-                            linkTo(methodOn(EstadoController.class).getEstadoById(estadoDTO.getId())).withSelfRel());
-                })
+        List<EntityModel<Estado>> estadosComLinks = listaEstados.stream()
+                .map(estado -> EntityModel.of(estado,
+                            linkTo(methodOn(EstadoController.class).getEstadoById(estado.getCodEstado())).withSelfRel())
+                )
                 .collect(Collectors.toList());
-        CollectionModel<EntityModel<EstadoDTO>> collectionModel = CollectionModel.of(estadosComLinks,
+        CollectionModel<EntityModel<Estado>> collectionModel = CollectionModel.of(estadosComLinks,
                 linkTo(methodOn(EstadoController.class).getAllEstados()).withSelfRel());
         return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
@@ -83,14 +80,14 @@ public class EstadoController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Estado encontrado com sucesso")
     })
-    public ResponseEntity<EntityModel<EstadoDTO>> getEstadoById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<Estado>> getEstadoById(@PathVariable Long id) {
         Optional<Estado> estadoSalvo = estadoRepository.findById(id);
         if (estadoSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        EstadoDTO estadoResponse = estadoMapper.entityToDTO(estadoSalvo.get());
-        EntityModel<EstadoDTO> resource = EntityModel.of(estadoResponse,
-                linkTo(methodOn(EstadoController.class).getEstadoById(estadoResponse.getId())).withSelfRel());
+        Estado estado = estadoSalvo.get();
+        EntityModel<Estado> resource = EntityModel.of(estado,
+                linkTo(methodOn(EstadoController.class).getEstadoById(id)).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
@@ -101,7 +98,7 @@ public class EstadoController {
                     content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "200", description = "Estado atualizado com sucesso")
     })
-    public ResponseEntity<EntityModel<EstadoDTO>> updateEstado(@PathVariable Long id, @Valid @RequestBody EstadoDTO estadoDTO) {
+    public ResponseEntity<EntityModel<Estado>> updateEstado(@PathVariable Long id, @Valid @RequestBody EstadoDTO estadoDTO) {
         Optional<Estado> estadoSalvo = estadoRepository.findById(id);
         if (estadoSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -109,9 +106,8 @@ public class EstadoController {
         Estado estadoAtualizado = estadoMapper.dtoToEntity(estadoDTO);
         estadoAtualizado.setCodEstado(id);
         Estado estadoSalvoAtualizado = estadoRepository.save(estadoAtualizado);
-        EstadoDTO estadoResponse = estadoMapper.entityToDTO(estadoSalvoAtualizado);
-        EntityModel<EstadoDTO> resource = EntityModel.of(estadoResponse,
-                linkTo(methodOn(EstadoController.class).getEstadoById(estadoResponse.getId())).withSelfRel());
+        EntityModel<Estado> resource = EntityModel.of(estadoSalvoAtualizado,
+                linkTo(methodOn(EstadoController.class).getEstadoById(estadoSalvoAtualizado.getCodEstado())).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 

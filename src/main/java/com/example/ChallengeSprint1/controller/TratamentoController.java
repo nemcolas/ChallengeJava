@@ -19,8 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -45,12 +44,11 @@ public class TratamentoController {
                     content = @Content(schema = @Schema()))
     })
     @PostMapping
-    public ResponseEntity<EntityModel<TratamentoDTO>> createTratamento(@Valid @RequestBody TratamentoDTO tratamentoDTO) {
+    public ResponseEntity<EntityModel<Tratamento>> createTratamento(@Valid @RequestBody TratamentoDTO tratamentoDTO) {
         Tratamento tratamentoConvertido = tratamentoMapper.dtoToEntity(tratamentoDTO);
         Tratamento tratamentoCriado = tratamentoRepository.save(tratamentoConvertido);
-        TratamentoDTO tratamentoResponse = tratamentoMapper.entityToDTO(tratamentoCriado);
-        EntityModel<TratamentoDTO> resource = EntityModel.of(tratamentoResponse,
-                linkTo(methodOn(TratamentoController.class).getTratamentoById(tratamentoResponse.getId())).withSelfRel());
+        EntityModel<Tratamento> resource = EntityModel.of(tratamentoCriado,
+                linkTo(methodOn(TratamentoController.class).getTratamentoById(tratamentoCriado.getIdTratamento())).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
@@ -62,19 +60,17 @@ public class TratamentoController {
             @ApiResponse(responseCode = "200", description = "Tratamentos retornados com sucesso")
     })
     @GetMapping
-    public ResponseEntity<CollectionModel<EntityModel<TratamentoDTO>>> getAllTratamentos() {
+    public ResponseEntity<CollectionModel<EntityModel<Tratamento>>> getAllTratamentos() {
         List<Tratamento> listaTratamentos = tratamentoRepository.findAll();
         if (listaTratamentos.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        List<EntityModel<TratamentoDTO>> tratamentosComLinks = listaTratamentos.stream()
-                .map(tratamento -> {
-                    TratamentoDTO tratamentoDTO = tratamentoMapper.entityToDTO(tratamento);
-                    return EntityModel.of(tratamentoDTO,
-                            linkTo(methodOn(TratamentoController.class).getTratamentoById(tratamentoDTO.getId())).withSelfRel());
-                })
+        List<EntityModel<Tratamento>> tratamentosComLinks = listaTratamentos.stream()
+                .map(tratamento -> EntityModel.of(tratamento,
+                        linkTo(methodOn(TratamentoController.class).getTratamentoById(tratamento.getIdTratamento())).withSelfRel())
+                )
                 .collect(Collectors.toList());
-        CollectionModel<EntityModel<TratamentoDTO>> collectionModel = CollectionModel.of(tratamentosComLinks,
+        CollectionModel<EntityModel<Tratamento>> collectionModel = CollectionModel.of(tratamentosComLinks,
                 linkTo(methodOn(TratamentoController.class).getAllTratamentos()).withSelfRel());
         return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
@@ -87,14 +83,14 @@ public class TratamentoController {
             @ApiResponse(responseCode = "200", description = "Tratamento encontrado com sucesso")
     })
     @GetMapping("/{id}")
-    public ResponseEntity<EntityModel<TratamentoDTO>> getTratamentoById(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<Tratamento>> getTratamentoById(@PathVariable Long id) {
         Optional<Tratamento> tratamentoSalvo = tratamentoRepository.findById(id);
         if (tratamentoSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        TratamentoDTO tratamentoResponse = tratamentoMapper.entityToDTO(tratamentoSalvo.get());
-        EntityModel<TratamentoDTO> resource = EntityModel.of(tratamentoResponse,
-                linkTo(methodOn(TratamentoController.class).getTratamentoById(tratamentoResponse.getId())).withSelfRel());
+        Tratamento tratamento = tratamentoSalvo.get();
+        EntityModel<Tratamento> resource = EntityModel.of(tratamento,
+                linkTo(methodOn(TratamentoController.class).getTratamentoById(id)).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
@@ -106,7 +102,7 @@ public class TratamentoController {
             @ApiResponse(responseCode = "200", description = "Tratamento atualizado com sucesso")
     })
     @PutMapping("/{id}")
-    public ResponseEntity<EntityModel<TratamentoDTO>> updateTratamento(@PathVariable Long id, @Valid @RequestBody TratamentoDTO tratamentoDTO) {
+    public ResponseEntity<EntityModel<Tratamento>> updateTratamento(@PathVariable Long id, @Valid @RequestBody TratamentoDTO tratamentoDTO) {
         Optional<Tratamento> tratamentoSalvo = tratamentoRepository.findById(id);
         if (tratamentoSalvo.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -114,9 +110,8 @@ public class TratamentoController {
         Tratamento tratamentoAtualizado = tratamentoMapper.dtoToEntity(tratamentoDTO);
         tratamentoAtualizado.setIdTratamento(id);
         Tratamento tratamentoSalvoAtualizado = tratamentoRepository.save(tratamentoAtualizado);
-        TratamentoDTO tratamentoResponse = tratamentoMapper.entityToDTO(tratamentoSalvoAtualizado);
-        EntityModel<TratamentoDTO> resource = EntityModel.of(tratamentoResponse,
-                linkTo(methodOn(TratamentoController.class).getTratamentoById(tratamentoResponse.getId())).withSelfRel());
+        EntityModel<Tratamento> resource = EntityModel.of(tratamentoSalvoAtualizado,
+                linkTo(methodOn(TratamentoController.class).getTratamentoById(id)).withSelfRel());
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
