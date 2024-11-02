@@ -13,7 +13,6 @@ public class BairroMapper {
     @Autowired
     private CidadeRepository cidadeRepository;
 
-    // Converte BairroDTO para Bairro (entidade)
     public Bairro dtoToEntity(BairroDTO bairroDTO) {
         Bairro bairro = new Bairro();
         bairro.setNome(bairroDTO.getNome());
@@ -23,7 +22,6 @@ public class BairroMapper {
         return bairro;
     }
 
-    // Converte Bairro (entidade) para BairroDTO
     public BairroDTO entityToDTO(Bairro bairro) {
         BairroDTO bairroDTO = new BairroDTO();
         bairroDTO.setId(bairro.getCodBairro());

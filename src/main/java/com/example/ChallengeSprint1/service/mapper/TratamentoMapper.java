@@ -13,7 +13,6 @@ public class TratamentoMapper {
     @Autowired
     private ConsultaRepository consultaRepository;
 
-    // Converte Tratamento (entidade) para TratamentoDTO
     public TratamentoDTO entityToDTO(Tratamento tratamento) {
         TratamentoDTO tratamentoDTO = new TratamentoDTO();
         tratamentoDTO.setId(tratamento.getIdTratamento());
@@ -26,7 +25,6 @@ public class TratamentoMapper {
         return tratamentoDTO;
     }
 
-    // Converte TratamentoDTO para Tratamento (entidade)
     public Tratamento dtoToEntity(TratamentoDTO tratamentoDTO) {
         Tratamento tratamento = new Tratamento();
         tratamento.setTipoTratamento(tratamentoDTO.getTipoTratamento());

@@ -37,7 +37,6 @@ public class SinistroController {
     @Autowired
     private SinistroMapper sinistroMapper;
 
-    // Cria um novo sinistro
     @Operation(summary = "Cria um sinistro e salva no banco de dados")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Sinistro cadastrado com sucesso"),
@@ -53,7 +52,6 @@ public class SinistroController {
         return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
-    // Lista todos os sinistros
     @Operation(summary = "Retorna todos os sinistros cadastrados")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Nenhum sinistro encontrado",
@@ -76,7 +74,6 @@ public class SinistroController {
         return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
 
-    // Retorna um sinistro por ID
     @Operation(summary = "Retorna um sinistro pelo ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Sinistro não encontrado",
@@ -95,7 +92,6 @@ public class SinistroController {
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
-    // Atualiza um sinistro
     @Operation(summary = "Atualiza um sinistro existente no banco de dados")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "Sinistro não encontrado ou atributos inválidos",
@@ -116,7 +112,6 @@ public class SinistroController {
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
-    // Deleta um sinistro
     @Operation(summary = "Deleta um sinistro do banco de dados")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "Sinistro não encontrado",

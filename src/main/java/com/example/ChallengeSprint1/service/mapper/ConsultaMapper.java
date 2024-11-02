@@ -18,7 +18,6 @@ public class ConsultaMapper {
     @Autowired
     private DentistaRepository dentistaRepository;
 
-    // Converte Consulta (entidade) para ConsultaDTO
     public ConsultaDTO entityToDTO(Consulta consulta) {
         ConsultaDTO consultaDTO = new ConsultaDTO();
         consultaDTO.setId(consulta.getIdConsulta());
@@ -31,7 +30,6 @@ public class ConsultaMapper {
         return consultaDTO;
     }
 
-    // Converte ConsultaDTO para Consulta (entidade)
     public Consulta dtoToEntity(ConsultaDTO consultaDTO) {
         Consulta consulta = new Consulta();
         consulta.setTipoConsulta(consultaDTO.getTipoConsulta());

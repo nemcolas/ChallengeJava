@@ -14,7 +14,6 @@ public class EnderecoMapper {
     @Autowired
     private BairroRepository bairroRepository;
 
-    // Converte EnderecoDTO para Endereco (entidade)
     public Endereco dtoToEntity(EnderecoDTO enderecoDTO) {
         Endereco endereco = new Endereco();
         endereco.setCep(endereco.getCep());
@@ -27,7 +26,6 @@ public class EnderecoMapper {
         return endereco;
     }
 
-    // Converte Endereco (entidade) para EnderecoDTO
     public EnderecoDTO entityToDTO(Endereco endereco) {
         EnderecoDTO enderecoDTO = new EnderecoDTO();
         enderecoDTO.setId(endereco.getCodEndereco());

@@ -36,7 +36,6 @@ public class TratamentoController {
     @Autowired
     private TratamentoMapper tratamentoMapper;
 
-    // Cria um novo tratamento
     @Operation(summary = "Cria um tratamento e salva no banco de dados")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Tratamento cadastrado com sucesso"),
@@ -52,7 +51,6 @@ public class TratamentoController {
         return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
-    // Lista todos os tratamentos
     @Operation(summary = "Retorna todos os tratamentos cadastrados")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Nenhum tratamento encontrado",
@@ -75,7 +73,6 @@ public class TratamentoController {
         return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
 
-    // Retorna um tratamento por ID
     @Operation(summary = "Retorna um tratamento pelo ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Tratamento não encontrado",
@@ -94,7 +91,6 @@ public class TratamentoController {
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
-    // Atualiza um tratamento
     @Operation(summary = "Atualiza um tratamento existente no banco de dados")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "Tratamento não encontrado ou atributos inválidos",
@@ -115,7 +111,6 @@ public class TratamentoController {
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
-    // Deleta um tratamento
     @Operation(summary = "Deleta um tratamento do banco de dados")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "Tratamento não encontrado",

@@ -18,7 +18,6 @@ public class PacienteMapper {
     @Autowired
     private EnderecoRepository enderecoRepository;
 
-    // Converte Paciente (entidade) para PacienteDTO
     public PacienteDTO entityToDTO(Paciente paciente) {
         PacienteDTO pacienteDTO = new PacienteDTO();
         pacienteDTO.setId(paciente.getIdPaciente());
@@ -30,7 +29,6 @@ public class PacienteMapper {
         return pacienteDTO;
     }
 
-    // Converte PacienteDTO para Paciente (entidade)
     public Paciente dtoToEntity(PacienteDTO pacienteDTO) {
         Paciente paciente = new Paciente();
         paciente.setNome(pacienteDTO.getNome());

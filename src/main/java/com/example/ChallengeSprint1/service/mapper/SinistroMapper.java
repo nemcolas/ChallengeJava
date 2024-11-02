@@ -15,7 +15,6 @@ public class SinistroMapper {
     @Autowired
     private ConsultaRepository consultaRepository;
 
-    // Converte SinistroDTO para Sinistro (entidade)
     public Sinistro dtoToEntity(SinistroDTO sinistroDTO) {
         Sinistro sinistro = new Sinistro();
         sinistro.setMotivoSinistro(sinistroDTO.getMotivoSinistro());
@@ -27,7 +26,6 @@ public class SinistroMapper {
         return sinistro;
     }
 
-    // Converte Sinistro (entidade) para SinistroDTO
     public SinistroDTO entityToDTO(Sinistro sinistro) {
         SinistroDTO sinistroDTO = new SinistroDTO();
         sinistroDTO.setId(sinistro.getIdSinistro());

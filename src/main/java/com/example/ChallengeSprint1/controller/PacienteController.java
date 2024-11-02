@@ -36,7 +36,6 @@ public class PacienteController {
     @Autowired
     private PacienteMapper pacienteMapper;
 
-    // Cria um novo paciente
     @Operation(summary = "Cria um paciente e salva no banco de dados")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Paciente cadastrado com sucesso"),
@@ -52,7 +51,6 @@ public class PacienteController {
         return new ResponseEntity<>(resource, HttpStatus.CREATED);
     }
 
-    // Lista todos os pacientes
     @Operation(summary = "Retorna todos os pacientes cadastrados")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Nenhum paciente encontrado",
@@ -75,7 +73,6 @@ public class PacienteController {
         return new ResponseEntity<>(collectionModel, HttpStatus.OK);
     }
 
-    // Retorna um paciente por ID
     @Operation(summary = "Retorna um paciente pelo ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Paciente não encontrado",
@@ -94,7 +91,6 @@ public class PacienteController {
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
-    // Atualiza um paciente
     @Operation(summary = "Atualiza um paciente existente no banco de dados")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "Paciente não encontrado ou atributos inválidos",
@@ -115,7 +111,6 @@ public class PacienteController {
         return new ResponseEntity<>(resource, HttpStatus.OK);
     }
 
-    // Deleta um paciente
     @Operation(summary = "Deleta um paciente do banco de dados")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "400", description = "Paciente não encontrado",

@@ -13,7 +13,6 @@ public class EstadoMapper {
     @Autowired
     private PaisRepository paisRepository;
 
-    // Converte EstadoDTO para Estado (entidade)
     public Estado dtoToEntity(EstadoDTO estadoDTO) {
         Estado estado = new Estado();
         estado.setNome(estadoDTO.getNome());
@@ -23,7 +22,6 @@ public class EstadoMapper {
         return estado;
     }
 
-    // Converte Estado (entidade) para EstadoDTO
     public EstadoDTO entityToDTO(Estado estado) {
         EstadoDTO estadoDTO = new EstadoDTO();
         estadoDTO.setId(estado.getCodEstado());

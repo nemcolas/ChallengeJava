@@ -18,7 +18,6 @@ public class DentistaMapper {
     @Autowired
     private EnderecoRepository enderecoRepository;
 
-    // Converte DentistaDTO para Dentista (entidade)
     public Dentista dtoToEntity(DentistaDTO dentistaDTO) {
         Dentista dentista = new Dentista();
         dentista.setNome(dentistaDTO.getNome());
@@ -33,7 +32,6 @@ public class DentistaMapper {
         return dentista;
     }
 
-    // Converte Dentista (entidade) para DentistaDTO
     public DentistaDTO entityToDTO(Dentista dentista) {
         DentistaDTO dentistaDTO = new DentistaDTO();
         dentistaDTO.setId(dentista.getIdDentista());

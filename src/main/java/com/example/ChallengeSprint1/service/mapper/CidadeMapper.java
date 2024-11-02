@@ -13,7 +13,6 @@ public class CidadeMapper {
     @Autowired
     private EstadoRepository estadoRepository;
 
-    // Converte CidadeDTO para Cidade (entidade)
     public Cidade dtoToEntity(CidadeDTO cidadeDTO) {
         Cidade cidade = new Cidade();
         cidade.setNome(cidadeDTO.getNome());
@@ -23,7 +22,6 @@ public class CidadeMapper {
         return cidade;
     }
 
-    // Converte Cidade (entidade) para CidadeDTO
     public CidadeDTO entityToDTO(Cidade cidade) {
         CidadeDTO cidadeDTO = new CidadeDTO();
         cidadeDTO.setId(cidade.getCodCidade());
