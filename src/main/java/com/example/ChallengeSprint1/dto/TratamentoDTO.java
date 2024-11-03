@@ -7,8 +7,6 @@ import lombok.Data;
 @Data
 public class TratamentoDTO {
 
-    private Long id;
-
     @NotNull(message = "O tipo de tratamento é obrigatório")
     @Size(max = 50, message = "O tipo de tratamento não pode ter mais que 50 caracteres")
     private String tipoTratamento;

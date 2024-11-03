@@ -16,7 +16,7 @@ public class EnderecoMapper {
 
     public Endereco dtoToEntity(EnderecoDTO enderecoDTO) {
         Endereco endereco = new Endereco();
-        endereco.setCep(endereco.getCep());
+        endereco.setCep(enderecoDTO.getCep());
         Bairro bairro = bairroRepository.findById(enderecoDTO.getBairro())
                 .orElseThrow(() -> new RuntimeException("Bairro não encontrado"));
         endereco.setBairro(bairro);
@@ -28,7 +28,6 @@ public class EnderecoMapper {
 
     public EnderecoDTO entityToDTO(Endereco endereco) {
         EnderecoDTO enderecoDTO = new EnderecoDTO();
-        enderecoDTO.setId(endereco.getCodEndereco());
         enderecoDTO.setCep(endereco.getCep());
         enderecoDTO.setBairro(endereco.getBairro().getCodBairro());
         enderecoDTO.setLogradouro(endereco.getLogradouro());

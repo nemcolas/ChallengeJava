@@ -24,7 +24,6 @@ public class BairroMapper {
 
     public BairroDTO entityToDTO(Bairro bairro) {
         BairroDTO bairroDTO = new BairroDTO();
-        bairroDTO.setId(bairro.getCodBairro());
         bairroDTO.setNome(bairro.getNome());
         bairroDTO.setCidade(bairro.getCidade().getCodCidade());
         return bairroDTO;

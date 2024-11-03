@@ -16,7 +16,6 @@ public class GeneroMapper {
 
     public GeneroDTO entityToDTO(Genero genero) {
         GeneroDTO generoDTO = new GeneroDTO();
-        generoDTO.setId(genero.getIdGenero());
         generoDTO.setDescricao(genero.getDescricao());
         return generoDTO;
     }

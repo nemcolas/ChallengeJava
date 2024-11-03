@@ -7,8 +7,6 @@ import lombok.Data;
 @Data
 public class SinistroDTO {
 
-    private Long id;
-
     @NotNull(message = "O motivo é obrigatório")
     @Size(max = 255, message = "O motivo não pode ter mais que 255 caracteres")
     private String motivoSinistro;

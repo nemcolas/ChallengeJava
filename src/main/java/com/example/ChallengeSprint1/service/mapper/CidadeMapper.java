@@ -24,7 +24,6 @@ public class CidadeMapper {
 
     public CidadeDTO entityToDTO(Cidade cidade) {
         CidadeDTO cidadeDTO = new CidadeDTO();
-        cidadeDTO.setId(cidade.getCodCidade());
         cidadeDTO.setNome(cidade.getNome());
         cidadeDTO.setEstado(cidade.getEstado().getCodEstado());
         return cidadeDTO;

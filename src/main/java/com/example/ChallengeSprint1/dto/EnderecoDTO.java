@@ -7,8 +7,6 @@ import lombok.Data;
 @Data
 public class EnderecoDTO {
 
-    private Long id;
-
     @NotNull(message = "O cep é obrigatório")
     @Size(max = 8, message = "O cep não pode ter mais que 8 caracteres")
     private Long cep;

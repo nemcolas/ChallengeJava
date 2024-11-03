@@ -7,8 +7,6 @@ import lombok.Data;
 @Data
 public class EstadoDTO {
 
-    private Long id;
-
     @NotNull(message = "O nome é obrigatório")
     @Size(max = 30, message = "O nome não pode ter mais que 30 caracteres")
     private String nome;

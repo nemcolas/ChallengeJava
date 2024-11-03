@@ -7,8 +7,6 @@ import lombok.Data;
 @Data
 public class PacienteDTO {
 
-    private Long id;
-
     @NotNull(message = "O nome é obrigatório")
     @Size(max = 100, message = "O nome não pode ter mais que 100 caracteres")
     private String nome;

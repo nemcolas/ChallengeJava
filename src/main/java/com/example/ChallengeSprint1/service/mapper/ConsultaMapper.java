@@ -20,7 +20,6 @@ public class ConsultaMapper {
 
     public ConsultaDTO entityToDTO(Consulta consulta) {
         ConsultaDTO consultaDTO = new ConsultaDTO();
-        consultaDTO.setId(consulta.getIdConsulta());
         consultaDTO.setTipoConsulta(consulta.getTipoConsulta());
         consultaDTO.setCusto(consulta.getCusto());
         consultaDTO.setStatusSinistro(consulta.getStatusSinistro());

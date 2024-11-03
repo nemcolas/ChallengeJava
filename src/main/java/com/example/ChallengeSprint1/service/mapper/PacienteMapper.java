@@ -20,7 +20,6 @@ public class PacienteMapper {
 
     public PacienteDTO entityToDTO(Paciente paciente) {
         PacienteDTO pacienteDTO = new PacienteDTO();
-        pacienteDTO.setId(paciente.getIdPaciente());
         pacienteDTO.setNome(paciente.getNome());
         pacienteDTO.setCpf(paciente.getCpf());
         pacienteDTO.setDataNascimento(paciente.getDataNascimento());

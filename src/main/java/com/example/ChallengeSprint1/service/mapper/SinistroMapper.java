@@ -28,7 +28,6 @@ public class SinistroMapper {
 
     public SinistroDTO entityToDTO(Sinistro sinistro) {
         SinistroDTO sinistroDTO = new SinistroDTO();
-        sinistroDTO.setId(sinistro.getIdSinistro());
         sinistroDTO.setMotivoSinistro(sinistro.getMotivoSinistro());
         sinistroDTO.setDataAbertura(String.valueOf(sinistro.getDataAbertura()));
         sinistroDTO.setStatusSinistro(sinistro.getStatusSinistro());

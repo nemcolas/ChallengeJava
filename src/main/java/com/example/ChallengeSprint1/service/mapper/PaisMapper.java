@@ -15,7 +15,6 @@ public class PaisMapper {
 
     public PaisDTO entityToDTO(Pais pais) {
         PaisDTO paisDTO = new PaisDTO();
-        paisDTO.setId(pais.getCodPais());
         paisDTO.setNome(pais.getNome());
         return paisDTO;
     }

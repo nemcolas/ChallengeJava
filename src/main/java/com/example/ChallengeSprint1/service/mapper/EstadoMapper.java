@@ -24,7 +24,6 @@ public class EstadoMapper {
 
     public EstadoDTO entityToDTO(Estado estado) {
         EstadoDTO estadoDTO = new EstadoDTO();
-        estadoDTO.setId(estado.getCodEstado());
         estadoDTO.setNome(estado.getNome());
         estadoDTO.setPais(estado.getPais().getCodPais());
         return estadoDTO;

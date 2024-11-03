@@ -7,8 +7,6 @@ import lombok.Data;
 @Data
 public class ConsultaDTO {
 
-    private Long id;
-
     @NotNull(message = "A data da consulta é obrigatória")
     @Size(max = 20, message = "A data da consulta não pode ter mais que 20 caracteres")
     private String dataConsulta;

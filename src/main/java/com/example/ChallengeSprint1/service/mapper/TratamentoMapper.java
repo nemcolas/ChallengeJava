@@ -15,7 +15,6 @@ public class TratamentoMapper {
 
     public TratamentoDTO entityToDTO(Tratamento tratamento) {
         TratamentoDTO tratamentoDTO = new TratamentoDTO();
-        tratamentoDTO.setId(tratamento.getIdTratamento());
         tratamentoDTO.setTipoTratamento(tratamento.getTipoTratamento());
         tratamentoDTO.setDescricao(tratamento.getDescricao());
         tratamentoDTO.setCusto(tratamento.getCusto());

@@ -34,7 +34,6 @@ public class DentistaMapper {
 
     public DentistaDTO entityToDTO(Dentista dentista) {
         DentistaDTO dentistaDTO = new DentistaDTO();
-        dentistaDTO.setId(dentista.getIdDentista());
         dentistaDTO.setNome(dentista.getNome());
         dentistaDTO.setCro(dentista.getCro());
         dentistaDTO.setEspecialidade(dentista.getEspecialidade());
