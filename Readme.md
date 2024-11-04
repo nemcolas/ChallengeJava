@@ -2,9 +2,9 @@
 
 ## Membros
 - Luana Sousa Matos RM552621
-  - Tarefas: Revisão e correção, testes e documentação [ concluído em 07/10/2024 ]
+  - Tarefas: Desenvolvimento
 - Nicolas Martins RM553478
-  - Tarefas: Desenvolvimento [ concluído em 30/09/2024 ]
+  - Tarefas: Planejamento, revisão, testes e documentação
  
 ## Link para o vídeo no youtube
 - https://youtu.be/nZGXHw4vg7Q
@@ -14,7 +14,7 @@ todo o ecossistema de uma consulta odontologica para pegar esses dados e ver a p
 
 ## Pré-requisitos
 
-- Java 18 ou superior
+- Java 17 ou superior
 - Gradle
 - IDE de sua escolha (recomendado: IntelliJ IDEA)
 
@@ -61,19 +61,19 @@ A aplicação estará disponível em `http://localhost:8080`. Você pode usar fe
 
 ### Pacientes
 
-- **POST /paciente**: Cria um novo paciente.
-- **GET /paciente**: Retorna todos os pacientes.
-- **GET /paciente/{id}**: Retorna um paciente pelo ID.
-- **PUT /paciente/{id}**: Atualiza um paciente existente.
-- **DELETE /paciente/{id}**: Deleta um paciente.
+- **POST /pacientes**: Cria um novo paciente.
+- **GET /pacientes**: Retorna todos os pacientes.
+- **GET /pacientes/{id}**: Retorna um paciente pelo ID.
+- **PUT /pacientes/{id}**: Atualiza um paciente existente.
+- **DELETE /pacientes/{id}**: Deleta um paciente.
 
 ### Tratamentos
 
-- **POST /tratamento**: Cria um novo tratamento.
-- **GET /tratamento**: Retorna todos os tratamentos.
-- **GET /tratamento/{id}**: Retorna um tratamento pelo ID.
-- **PUT /tratamento/{id}**: Atualiza um tratamento existente.
-- **DELETE /tratamento/{id}**: Deleta um tratamento.
+- **POST /tratamentos**: Cria um novo tratamento.
+- **GET /tratamentos**: Retorna todos os tratamentos.
+- **GET /tratamentos/{id}**: Retorna um tratamento pelo ID.
+- **PUT /tratamentos/{id}**: Atualiza um tratamento existente.
+- **DELETE /tratamentos/{id}**: Deleta um tratamento.
 
 ### Sinistros
 
@@ -82,6 +82,54 @@ A aplicação estará disponível em `http://localhost:8080`. Você pode usar fe
 - **GET /sinistros/{id}**: Retorna um sinistro pelo ID.
 - **PUT /sinistros/{id}**: Atualiza um sinistro existente.
 - **DELETE /sinistros/{id}**: Deleta um sinistro.
+
+### Generos
+
+- **POST /genero**: Cria um novo genero.
+- **GET /genero**: Retorna todos os generos.
+- **GET /genero/{id}**: Retorna um genero pelo ID.
+- **PUT /genero/{id}**: Atualiza um genero existente.
+- **DELETE /genero/{id}**: Deleta um genero.
+
+### Pais
+
+- **POST /pais**: Cria um novo pais.
+- **GET /pais**: Retorna todos os paises.
+- **GET /pais/{id}**: Retorna um pais pelo ID.
+- **PUT /pais/{id}**: Atualiza um pais existente.
+- **DELETE /pais/{id}**: Deleta um pais.
+
+### Estado
+
+- **POST /estado**: Cria um novo estado.
+- **GET /estado**: Retorna todos os estados.
+- **GET /estado/{id}**: Retorna um estado pelo ID.
+- **PUT /estado/{id}**: Atualiza um estado existente.
+- **DELETE /estado/{id}**: Deleta um estado.
+
+### Cidade
+
+- **POST /cidade**: Cria uma nova cidade.
+- **GET /cidade**: Retorna todas as cidades.
+- **GET /cidade/{id}**: Retorna uma cidade pelo ID.
+- **PUT /cidade/{id}**: Atualiza uma cidade existente.
+- **DELETE /cidade/{id}**: Deleta uma cidade.
+
+### Bairro
+
+- **POST /bairro**: Cria um novo bairro.
+- **GET /bairro**: Retorna todos os bairros.
+- **GET /bairro/{id}**: Retorna um bairro pelo ID.
+- **PUT /bairro/{id}**: Atualiza um bairro existente.
+- **DELETE /bairro/{id}**: Deleta um bairro.
+
+### Endereco
+
+- **POST /endereco**: Cria um novo endereco.
+- **GET /endereco**: Retorna todos os enderecos.
+- **GET /endereco/{id}**: Retorna um endereco pelo ID.
+- **PUT /endereco/{id}**: Atualiza um endereco existente.
+- **DELETE /endereco/{id}**: Deleta um endereco.
   
 ## Swagger
 
