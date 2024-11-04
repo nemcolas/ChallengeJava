@@ -140,7 +140,32 @@ A aplicação estará disponível em `http://localhost:8080`. Você pode usar fe
 
 https://github.com/nemcolas/ChallengeJava/blob/master/documentos/testes_api_postman.json
 
-## Diagrama de entidade
+## Diagrama de Entidade e Relacionamento
 
-![diagrama](https://github.com/user-attachments/assets/ee54ac62-833a-4e4b-b63b-f1c8af059b6e)
+![diagrama](Relacional.jpg)
 
+## Diagramas de Classes de Entidade
+
+### Controllers
+
+![diagrama](controllers.png)
+
+### Dtos
+
+![diagrama](dtos.png)
+
+### Exception
+
+![diagrama](exception.png)
+
+### Mappers
+
+![diagrama](mappers.png)
+
+### Repositories
+
+![diagrama](repositories.png)
+
+### Models
+
+![diagrama](models.png)
