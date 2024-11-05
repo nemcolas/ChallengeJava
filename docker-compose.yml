@@ -1,0 +1,32 @@
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - oracle-db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:oracle:thin:@//oracle.fiap.com.br:1521/ORCL  # Referência ao nome do serviço Oracle no Docker
+      SPRING_DATASOURCE_USERNAME: rm553478
+      SPRING_DATASOURCE_PASSWORD: 291096
+    networks:
+      - app-network
+
+  oracle-db:
+    image: oracleinanutshell/oracle-xe-11g
+    ports:
+      - "1521:1521"
+    environment:
+      ORACLE_ALLOW_REMOTE: "true"
+      ORACLE_PASSWORD: 230196
+    volumes:
+      - oracle-data:/u01/app/oracle
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  oracle-data:
