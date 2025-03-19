@@ -5,7 +5,7 @@
   - Tarefas: Desenvolvimento
 - Nicolas Martins RM553478
   - Tarefas: Planejamento, revisão, testes e documentação
- 
+
 ## Link para o vídeo no youtube
 - https://youtu.be/nZGXHw4vg7Q
 
@@ -41,6 +41,10 @@ todo o ecossistema de uma consulta odontologica para pegar esses dados e ver a p
 
 A aplicação estará disponível em `http://localhost:8080`. Você pode usar ferramentas como Postman ou cURL para interagir com a API.
 
+## Novas páginas de CRUD com thymeleaf
+- Consultas: http://localhost:8080/consulta/lista
+- Sinistros: http://localhost:8080/sinistro/lista
+ 
 ## Endpoints
 
 ### Consultas
