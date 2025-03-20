@@ -6,8 +6,8 @@
 - Nicolas Martins RM553478
   - Tarefas: Planejamento, revisão, testes e documentação
 
-## Link para o vídeo no youtube
-- https://youtu.be/nZGXHw4vg7Q
+## Link para o vídeo do projeto funcionando
+- https://drive.google.com/file/d/1zHTwSEC9zAQ1Q3i1FELoXE0edE_fHmyS/view?usp=sharing
 
 Este projeto é uma aplicação Spring Boot para gerenciar consultas odontológicas, pacientes, dentistas e sinistros. tem como funcionalidade gerenciar 
 todo o ecossistema de uma consulta odontologica para pegar esses dados e ver a possibilidade de sinistros do plano de saúde.
