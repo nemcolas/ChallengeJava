@@ -144,6 +144,93 @@ A aplicação estará disponível em `http://localhost:8080`. Você pode usar fe
 
 https://github.com/nemcolas/ChallengeJava/blob/master/documentos/testes_api_postman.json
 
+## Deploy e Testes
+
+Este guia descreve o passo a passo para realizar o deploy e testar a aplicação.
+
+### 1. Ambiente Local
+1. Clone o repositório:
+   ```sh
+   git clone <URL_DO_REPOSITORIO>
+   cd <NOME_DO_PROJETO>
+   ```
+2. Compile a aplicação utilizando Gradle para gerar o arquivo JAR:
+   ```sh
+   ./gradlew build
+   ```
+3. Execute a aplicação localmente e acesse a porta 8080 para validar o funcionamento:
+   ```sh
+   java -jar build/libs/<NOME_DO_ARQUIVO>.jar
+   ```
+
+### 2. Containerização
+1. Construa a imagem Docker da aplicação:
+   ```sh
+   docker build -t challengejava .
+   ```
+2. Execute o container localmente para validar a imagem:
+   ```sh
+   docker run -p 8080:8080 challengejava
+   ```
+
+### 3. Azure Container Registry (ACR)
+1. Crie um Resource Group na região `brazilsouth`:
+   ```sh
+   az group create --name ChallengeSprint3 --location brazilsouth
+   ```
+2. Crie um ACR chamado `challengesprint3`:
+   ```sh
+   az acr create --resource-group ChallengeSprint3 --name challengesprint3 --sku Basic
+   ```
+3. Faça login no ACR:
+   ```sh
+   az acr login --name challengesprint3
+   ```
+4. Tagueie a imagem Docker com o endereço do ACR:
+   ```sh
+   docker tag challengejava challengesprint3.azurecr.io/challengejava:v1
+   ```
+5. Envie a imagem para o ACR:
+   ```sh
+   docker push challengesprint3.azurecr.io/challengejava:v1
+   ```
+
+### 4. Azure Container Instances (ACI)
+1. Crie uma instância de container usando a imagem do ACR:
+   ```sh
+   az container create --resource-group ChallengeSprint3 \
+     --name challengejava-instance \
+     --image challengesprint3.azurecr.io/challengejava:v1 \
+     --cpu 1 --memory 1.5 \
+     --dns-name-label challengejava-aci \
+     --ports 8080 
+   ```
+2. Verifique se a instância está rodando:
+   ```sh
+   az container show --resource-group ChallengeSprint3 --name challengejava-instance --query instanceView.state
+   ```
+3. Obtenha o FQDN para acessar a aplicação:
+   ```sh
+   az container show --resource-group ChallengeSprint3 --name challengejava-instance --query ipAddress.fqdn --output tsv
+   ```
+
+### 5. Teste e Monitoramento
+1. Acesse a aplicação pelo navegador ou via curl usando o FQDN obtido:
+   ```sh
+   curl http://challengejava-aci.brazilsouth.azurecontainer.io:8080
+   ```
+2. Verifique os logs do container:
+   ```sh
+   az container logs --resource-group ChallengeSprint3 --name challengejava-instance
+   ```
+3. Se necessário, reinicie a instância:
+   ```sh
+   az container restart --resource-group ChallengeSprint3 --name challengejava-instance
+   ```
+4. Para testar a API, os JSONs com os dados necessários estão disponíveis no Swagger da aplicação.
+
+
+
 ## Diagrama de Entidade e Relacionamento
 
 ![diagrama](Relacional.jpg)
