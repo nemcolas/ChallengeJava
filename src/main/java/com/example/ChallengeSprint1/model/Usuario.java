@@ -7,13 +7,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "USUARIO")
+@Table(name = "TB_USUARIO")
 @Data
 public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "COD_USUARIO") // <- aqui é o nome real da coluna no Oracle
+    @Column(name = "COD_USUARIO")
     private Long id;
 
     @Column(name = "USERNAME")
@@ -23,7 +23,7 @@ public class Usuario {
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "USUARIO_ROLES", joinColumns = @JoinColumn(name = "USUARIO_ID"))
+    @CollectionTable(name = "TB_USUARIO_ROLES", joinColumns = @JoinColumn(name = "USUARIO_ID"))
     @Column(name = "ROLE")
     private Set<String> roles = new HashSet<>();
 }

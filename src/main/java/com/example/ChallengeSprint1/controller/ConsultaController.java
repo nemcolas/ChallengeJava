@@ -1,6 +1,7 @@
 package com.example.ChallengeSprint1.controller;
 
 import com.example.ChallengeSprint1.dto.ConsultaDTO;
+import com.example.ChallengeSprint1.producer.ConsultaProducer;
 import com.example.ChallengeSprint1.service.ConsultaService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -12,9 +13,11 @@ import org.springframework.web.servlet.ModelAndView;
 public class ConsultaController {
 
     private final ConsultaService consultaService;
+    private final ConsultaProducer consultaProducer;
 
-    public ConsultaController(ConsultaService consultaService) {
+    public ConsultaController(ConsultaService consultaService, ConsultaProducer consultaProducer) {
         this.consultaService = consultaService;
+        this.consultaProducer = consultaProducer;
     }
 
     @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
@@ -29,6 +32,7 @@ public class ConsultaController {
     @PostMapping("/cadastrar")
     public ModelAndView cadastrarConsulta(ConsultaDTO consultaDTO) {
         consultaService.cadastrarConsulta(consultaDTO);
+        consultaProducer.enviarMensagem("✅ Nova consulta cadastrada com sucesso.");
         return new ModelAndView("redirect:/consulta/lista");
     }
 
@@ -44,6 +48,7 @@ public class ConsultaController {
     @PostMapping("/atualizar/{id}")
     public ModelAndView atualizarConsulta(@PathVariable Long id, ConsultaDTO consultaDTO) {
         consultaService.atualizarConsulta(id, consultaDTO);
+        consultaProducer.enviarMensagem("🔁 Consulta atualizada: ID = " + id);
         return new ModelAndView("redirect:/consulta/lista");
     }
 
@@ -51,6 +56,7 @@ public class ConsultaController {
     @GetMapping("/deletar/{id}")
     public ModelAndView deletarConsulta(@PathVariable Long id) {
         consultaService.deletarConsulta(id);
+        consultaProducer.enviarMensagem("🗑️ Consulta deletada: ID = " + id);
         return new ModelAndView("redirect:/consulta/lista");
     }
 }

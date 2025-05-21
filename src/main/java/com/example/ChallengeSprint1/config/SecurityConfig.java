@@ -30,7 +30,7 @@ public class SecurityConfig {
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/api/v1/user/home", true) // Redireciona após login
+                        .defaultSuccessUrl("/consulta/lista", true) // Redireciona após login
                         .permitAll()
                 )
                 .logout(logout -> logout
