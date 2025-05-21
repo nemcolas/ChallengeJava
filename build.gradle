@@ -46,6 +46,13 @@ dependencies {
 	// Hibernate
 	implementation 'org.hibernate.orm:hibernate-core'
 
+	//RabbitMQ
+	implementation 'org.springframework.amqp:spring-rabbit'
+
+	// Spring Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+
 }
 
 tasks.named('test') {
