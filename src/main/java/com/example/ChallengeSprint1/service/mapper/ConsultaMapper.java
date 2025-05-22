@@ -19,28 +19,50 @@ public class ConsultaMapper {
     private DentistaRepository dentistaRepository;
 
     public ConsultaDTO entityToDTO(Consulta consulta) {
+        if (consulta == null) {
+            return null;
+        }
+        
         ConsultaDTO consultaDTO = new ConsultaDTO();
         consultaDTO.setTipoConsulta(consulta.getTipoConsulta());
         consultaDTO.setCusto(consulta.getCusto());
         consultaDTO.setStatusSinistro(consulta.getStatusSinistro());
         consultaDTO.setDataConsulta(consulta.getDataConsulta());
-        consultaDTO.setPaciente(consulta.getPaciente().getIdPaciente());
-        consultaDTO.setDentista(consulta.getDentista().getIdDentista());
+        
+        if (consulta.getPaciente() != null) {
+            consultaDTO.setPaciente(consulta.getPaciente().getIdPaciente());
+        }
+        
+        if (consulta.getDentista() != null) {
+            consultaDTO.setDentista(consulta.getDentista().getIdDentista());
+        }
+        
         return consultaDTO;
     }
 
     public Consulta dtoToEntity(ConsultaDTO consultaDTO) {
+        if (consultaDTO == null) {
+            return null;
+        }
+        
         Consulta consulta = new Consulta();
         consulta.setTipoConsulta(consultaDTO.getTipoConsulta());
         consulta.setCusto(consultaDTO.getCusto());
         consulta.setStatusSinistro(consultaDTO.getStatusSinistro());
         consulta.setDataConsulta(consultaDTO.getDataConsulta());
-        Paciente paciente = pacienteRepository.findById(consultaDTO.getPaciente())
-                .orElseThrow(() -> new RuntimeException("Paciente não encontrado"));
-        consulta.setPaciente(paciente);
-        Dentista dentista = dentistaRepository.findById(consultaDTO.getDentista())
-                .orElseThrow(() -> new RuntimeException("Dentista não encontrado"));
-        consulta.setDentista(dentista);
+        
+        if (consultaDTO.getPaciente() != null) {
+            Paciente paciente = pacienteRepository.findById(consultaDTO.getPaciente())
+                    .orElseThrow(() -> new RuntimeException("Paciente não encontrado com ID: " + consultaDTO.getPaciente()));
+            consulta.setPaciente(paciente);
+        }
+        
+        if (consultaDTO.getDentista() != null) {
+            Dentista dentista = dentistaRepository.findById(consultaDTO.getDentista())
+                    .orElseThrow(() -> new RuntimeException("Dentista não encontrado com ID: " + consultaDTO.getDentista()));
+            consulta.setDentista(dentista);
+        }
+        
         return consulta;
     }
 }
